@@ -18,6 +18,7 @@ class AuthController
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'legal_text' => ['required'],
             'kvkk_text' => ['required'],
+            'specialty' => ['required', 'min:1'],
         ]);
 
         $user = User::create([
@@ -26,6 +27,7 @@ class AuthController
             'password' => Hash::make($data['password']),
             'legal_text' => $data['legal_text'],
             'kvkk_text' => $data['kvkk_text'],
+            'specialty' => $data['specialty'],
         ]);
 
         if ($user) {
