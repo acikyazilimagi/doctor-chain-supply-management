@@ -15,9 +15,9 @@ class AuthController
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name' => ['required', 'string', 'min:2', 'max:30'],
+            'email' => ['required', 'string', 'email', 'max:60', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'max:25', 'confirmed'],
             'legal_text' => ['required'],
             'kvkk_text' => ['required'],
             'specialty' => ['required', 'min:1'],
