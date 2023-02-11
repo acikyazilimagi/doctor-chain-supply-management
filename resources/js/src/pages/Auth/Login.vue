@@ -69,7 +69,7 @@ export default {
                 remember: this.remember,
             }
             await axios.get('/sanctum/csrf-cookie').then(async () => {
-                await axios.post('/api/auth/login', data).then(({data})=>{
+                await axios.post('/api/auth/login', data).then(()=>{
                     this.signIn()
                 }).catch(({response})=>{
                     if(response.status===422){

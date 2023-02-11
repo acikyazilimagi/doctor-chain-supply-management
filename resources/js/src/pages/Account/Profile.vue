@@ -11,7 +11,7 @@
             </tr>
             <tr>
                 <td>Uzmanlık</td>
-                <td>{{ user.specialty.name }}</td>
+                <td>{{ user.specialty?.name }}</td>
             </tr>
         </tbody>
     </table>
