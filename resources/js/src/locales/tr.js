@@ -67,6 +67,10 @@ const tr = {
                     kvkk_text: {
                         title: 'KVKK Metni',
                     },
+                    referral_code: {
+                        title: 'Referans Kodu',
+                        placeholder: 'Lütfen size gelen referans kodunu giriniz.'
+                    },
                 }
             }
         },

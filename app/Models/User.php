@@ -24,6 +24,7 @@ class User extends Authenticatable
         'specialty',
         'legal_text',
         'kvkk_text',
+        'referral_link_code',
     ];
 
     /**
@@ -35,6 +36,10 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function referral_lins(){
+        return $this->hasMany(ReferralLink::class, 'user_id', 'id');
+    }
 
     /**
      * The attributes that should be cast.

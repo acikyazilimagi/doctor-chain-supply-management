@@ -123,6 +123,28 @@
                     </div>
 
                     <div class="row mb-3">
+                        <label for="name" class="col-md-4 col-form-label text-md-end">Referans Kodu</label>
+
+                        <div class="col-md-6">
+                            <input
+                                id="referral_code"
+                                type="text"
+                                v-model="referral_code"
+                                class="form-control"
+                                name="referral_code"
+                                :placeholder="$t('modules.auth.register.form.referral_code.placeholder')"
+                                :class="{
+                                    'is-invalid': vuelidate$.referral_code.$error,
+                                    'is-valid': vuelidate$.referral_code.$dirty && !vuelidate$.referral_code.$invalid,
+                                }"
+                                @input="vuelidate$.referral_code.$touch()"
+                                @focus="vuelidate$.referral_code.$touch()"
+                            >
+                            <SingleInputError :vuelidate-object="vuelidate$.referral_code" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
                         <div class="col-md-6 offset-md-4">
                             <div class="form-check">
                                 <input
@@ -212,6 +234,7 @@ export default {
             specialty: null,
             legal_text: null,
             kvkk_text: null,
+            referral_code: null,
 
             specialties: [],
 
@@ -226,6 +249,7 @@ export default {
                     specialty: this.$t('modules.auth.register.form.specialty.title'),
                     legal_text: this.$t('modules.auth.register.form.legal_text.title'),
                     kvkk_text: this.$t('modules.auth.register.form.kvkk_text.title'),
+                    referral_code: this.$t('modules.auth.register.form.referral_code.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
             },
@@ -234,6 +258,11 @@ export default {
     created() {
         this.reset()
         this.prepareSpecialties()
+
+        const referral_code = this.$router.currentRoute.value.query?.referral_code
+        if (referral_code){
+            this.referral_code = referral_code
+        }
     },
     computed: {
         backendAndFrontendCombinedErrorsStatus() {
@@ -258,6 +287,7 @@ export default {
             },
             email: {
                 email,
+                maxLength: maxLength(60),
                 required,
                 $autoDirty: true,
                 $lazy: true,
@@ -292,6 +322,13 @@ export default {
                 $autoDirty: true,
                 $lazy: true,
             },
+            referral_code: {
+                minLength: minLength(16),
+                maxLength: maxLength(16),
+                required,
+                $autoDirty: true,
+                $lazy: true,
+            },
         }
     },
     methods: {
@@ -313,6 +350,7 @@ export default {
             this.specialty = null
             this.legal_text = null
             this.kvkk_text = null
+            this.referral_code = null
 
             // this.vuelidate$.$reset()
             this.form_is_posted = false
@@ -338,6 +376,7 @@ export default {
                 specialty: this.specialty,
                 legal_text: this.legal_text,
                 kvkk_text: this.kvkk_text,
+                referral_code: this.referral_code,
             }
 
             $this.$swal.fire({
@@ -347,13 +386,14 @@ export default {
                 if (result.isConfirmed) {
                     await $this.axios.post('/api/auth/register', data)
                         .then((response) => {
-                            if (response.status) {
-                                this.$swal.fire('Başarılı', response.data.message, 'success').then(() => {
-                                    this.reset()
-                                    this.$router.push({name:"Auth.Login"})
-                                })
+                            if (response.data.status) {
+                                this.$swal
+                                    .fire(response.data.message.title, response.data.message.body, response.data.message.type)
+                                    .then(() => {
+                                        this.$router.push({name:"Auth.Login"})
+                                    })
                             } else {
-                                this.$swal.fire('Hata', response.data.message, 'danger')
+                                this.$swal.fire(response.data.message.title, response.data.message.body, response.data.message.type)
                             }
                         })
                         .catch((e) => {
