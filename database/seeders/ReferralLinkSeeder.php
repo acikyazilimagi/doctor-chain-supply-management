@@ -11,7 +11,7 @@ class ReferralLinkSeeder extends Seeder
     {
         ReferralLink::create([
             'user_id' => 0,
-            'code' => '1234567890ABCDEF',
+            'code' => config('referral_links.REFERRAL_LINK_GOD_CODE'),
             'count' => 5,
         ]);
     }
