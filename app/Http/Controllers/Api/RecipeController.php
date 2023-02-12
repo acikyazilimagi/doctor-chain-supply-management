@@ -82,26 +82,6 @@ class RecipeController extends Controller
         }
     }
 
-    public function support(Recipe $recipe, Request $request){
-        try {
-            $recipe->fill([
-                'supported' => true,
-                'pharmacy_note' => $request->get('note'),
-            ]);
-            $recipe->save();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Kayıt başarıyla eklendi.'
-            ]);
-        }catch (\Exception $exception){
-            return response()->json([
-                'status' => false,
-                'message' => 'Teknik bir sorun oluştu, işlem başarısız oldu.'
-            ], 500);
-        }
-    }
-
     public function recipe_item_categories(){
         $categories = RecipeItem::categories();
 

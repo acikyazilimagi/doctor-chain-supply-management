@@ -3,9 +3,7 @@
         <div v-for="recipe in recipes" class="accordion-item">
             <h2 class="accordion-header" :id="'recipe_' + recipe.id">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#recipe_container_' + recipe.id" aria-expanded="false" :aria-controls="'recipe_container_' + recipe.id">
-                    <span class="badge me-2" :class="{'bg-success': recipe.supported, 'bg-warning': !recipe.supported}">{{ recipe.supported ? 'Karşılandı' : 'Bekliyor' }}</span>
                     <span>{{ recipe.title }}</span>
-                    <a v-if="!recipe.supported && user && recipe.created_by !== user.id" @click.prevent="support(recipe)" class="btn btn-sm btn-success d-inline-flex ms-auto">Gönderim Bildir</a>
                 </button>
             </h2>
             <div :id="'recipe_container_' + recipe.id" class="accordion-collapse collapse" :aria-labelledby="'recipe_container_' + recipe.id" :data-bs-parent="'#recipe_' + recipe.id">
@@ -34,7 +32,6 @@
 </template>
 
 <script>
-import { support } from '@/src/helpers.js'
 import AddressTable from "@/src/components/Address/Table.vue";
 
 export default {
@@ -52,9 +49,6 @@ export default {
         user() {
             return this.$store.getters['auth/user']
         }
-    },
-    methods: {
-        support
     },
     emits: ['refresh_data']
 }

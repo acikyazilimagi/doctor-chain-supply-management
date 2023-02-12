@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->integer('created_by');
             $table->boolean('supported')->default(false);
-            $table->string('pharmacy_note')->nullable();
             $table->timestamps();
         });
     }
