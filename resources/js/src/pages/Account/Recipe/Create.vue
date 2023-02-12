@@ -38,7 +38,7 @@
                             </div>
                         </div>
 
-                        <RecipeFormItem v-for="item in items" :text="item.text" :count="item.count" :order="item.order" :action_type="item.action_type" :category_id="item.category_id" @action="catchRecipeFormItemAction"/>
+                        <RecipeFormItem @recipeData="catchRecipeFormItemAction"/>
 
                         <div class="row mb-3">
                             <div class="col-12">
@@ -123,15 +123,7 @@ export default {
             form_is_posted: false,
 
             title: null,
-            items: [
-                {
-                    order: 1,
-                    action_type: true,
-                    text: null,
-                    count: 1,
-                    category_id: null
-                }
-            ],
+            items: [],
             address: {
                 city: null,
                 district: null,
@@ -215,45 +207,11 @@ export default {
             this.address.neighbourhood = data
         },
         catchRecipeFormItemAction(data){
-            if (data.action === 'add'){
-                this.items.push({
-                    order: this.items.length + 1,
-                    action_type: false,
-                    text: null,
-                    count: 1,
-                    category_id: null
-                })
-            }
-            if (data.action === 'update'){
-                let item = this.items.find(item => item.order === data.order)
-                item.text = data.text
-                item.count = data.count
-                item.category_id = data.category_id
-            }
-
-            if (data.action === 'remove'){
-                this.$swal.fire({
-                    title: "Emin Misiniz?",
-                    icon: 'question',
-                    showCancelButton: true,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        this.items.splice(this.items.findIndex(item => item.order === data.order), 1)
-                    }
-                })
-            }
+            this.items = data
         },
         reset() {
             this.title = null
-            this.items = [
-                {
-                    order: 1,
-                    action_type: true,
-                    text: null,
-                    count: 1,
-                    category_id: null
-                }
-            ]
+            this.items = []
             this.address = {
                 city: null,
                 district: null,
@@ -288,9 +246,9 @@ export default {
                         title: this.title,
                         items: this.items,
                         address:this.address,
+                        address_detail: this.address_detail,
                         description: this.description,
                     }
-                    data.address.address_detail = this.address_detail
                     await $this.axios.post('/api/account/recipes', data)
                         .then((response) => {
                             if (response.status) {
