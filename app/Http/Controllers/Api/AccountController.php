@@ -14,6 +14,7 @@ class AccountController extends Controller
     public function update(Request $request){
         try {
             $user = auth()->user();
+            $user->name = $request->get('name');
             $user->specialty = $request->get('specialty');
             $user->save();
 
