@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ReferralLinkSeeder::class,
             SpecialtySeeder::class,
-            \Epigra\TrGeoZones\Database\Seeders\TrGeoZonesDatabaseSeeder::class
+            \Epigra\TrGeoZones\Database\Seeders\TrGeoZonesDatabaseSeeder::class,
+            // RecipeSeeder::class,
         ]);
     }
 }
