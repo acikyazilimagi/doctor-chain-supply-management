@@ -10,7 +10,7 @@
                 <div class="accordion-body">
                     <div class="row">
                         <p>{{ recipe.description }}</p>
-                        <p>Adres Detayı : {{ recipe.address.address_detail }}</p>
+                        <p>Adres Detayı : {{ recipe.address?.address_detail }}</p>
                     </div>
                     <div class="row">
                         <div class="col-8">
