@@ -42,6 +42,7 @@ Route::group(['prefix' => 'account', 'as' => 'account.'], function (){
     Route::group(['prefix' => 'recipes', 'as' => 'recipe.'], function (){
         Route::post('/', [\App\Http\Controllers\Api\RecipeController::class, 'store'])->name('store')->middleware('auth:sanctum');
         Route::get('/my', [\App\Http\Controllers\Api\RecipeController::class, 'my'])->name('my')->middleware('auth:sanctum');
+        Route::post('/change-status', [\App\Http\Controllers\Api\RecipeController::class, 'change_status'])->name('change_status')->middleware('auth:sanctum');
     });
 
     Route::group(['prefix' => 'referral-links', 'as' => 'referral_link.'], function (){
