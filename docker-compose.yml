@@ -2,7 +2,7 @@ version: '3'
 services:
     doctorcsm:
         build:
-            context: ./docker/8.2
+            context: .
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
