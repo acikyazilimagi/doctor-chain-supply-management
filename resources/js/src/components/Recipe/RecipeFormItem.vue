@@ -1,24 +1,24 @@
 <template>
-    <div class="row mb-3">
+    <div class="row mb-3" v-for="item in recipeData" :key="index" >
         <div class="col-10 col-md-11">
             <div class="row">
                 <div class="col-6">
-                    <input id="text" v-model="text_" @change="update" type="text" class="form-control" name="text" placeholder="İhtiyaç adı/detayı">
+                    <input id="text" v-model="item.text" type="text" class="form-control" placeholder="İhtiyaç adı/detayı">
                 </div>
                 <div class="col-3">
-                    <select name="category_id" id="category_id" @change="update" v-model="category_id_" class="form-control">
+                    <select name="category_id" id="category_id" v-model="item.category_id" class="form-control">
                         <option :value="null">Seçiniz</option>
-                        <option v-for="c in categories" :value="c.id" :key="'category_' + c.id">{{ c.value }}</option>
+                        <option v-for="category in categories" :value="category.id" :key="'category_' + category.id">{{ category.value }}</option>
                     </select>
                 </div>
                 <div class="col-3">
-                    <input id="count" v-model="count_" @change="update" type="number" class="form-control" name="count" placeholder="Adet" min="1">
+                    <input id="count" v-model="item.count" type="number" class="form-control" name="count" placeholder="Adet" min="1">
                 </div>
             </div>
         </div>
         <div class="col-2 col-md-1">
-            <button v-if="action_type" type="button" class="btn btn-success col-12" @click.prevent="add">+</button>
-            <button v-else type="button" class="btn btn-danger col-12" @click.prevent="remove(order)">-</button>
+            <button v-if="item.action_type" type="button" class="btn btn-success col-12" @click.prevent="addNewRecipeItem()">+</button>
+            <button v-else type="button" class="btn btn-danger col-12" @click.prevent="removeRecipeItem(item.order)">-</button>
         </div>
     </div>
 </template>
@@ -27,39 +27,27 @@
 export default {
     name: "RecipeFormItem",
     props: {
-        action_type: {
-            type: Boolean,
-            default: true,
-        },
-        text: {
-            type: [String, null],
+        recipeData: {
+            type: Array,
             required: true
-        },
-        count: {
-            type: Number,
-            required: true
-        },
-        order: {
-            type: Number,
-            required: true
-        },
-        category_id: {
-            type: [String, Number, null],
-            required: true
-        },
+        }
     },
     data(){
         return {
-            text_: null,
-            count_: 1,
+            recipeData: [
+                {
+                    order: 1,
+                    text: null,
+                    count: 1,
+                    category_id: null,
+                    action_type: true
+                },
+            ],
             category_id_: null,
             categories: []
         }
     },
     created() {
-        this.text_ = this.text
-        this.count_ = this.count
-        this.category_id_ = this.category_id
         this.getRecipeItemCategories()
     },
     methods: {
@@ -81,14 +69,29 @@ export default {
                 category_id: this.category_id_,
             })
         },
-        add(){
-            this.$emit('action', {action: 'add'})
+        addNewRecipeItem(){
+            this.recipeData.push({
+                order: this.recipeData[this.recipeData.length-1].order + 1,
+                action_type: false,
+                text: null,
+                count: 1,
+                category_id: null
+            })
+            this.$emit('recipeData', this.recipeData)
         },
-        remove(){
-            this.$emit('action', {action: 'remove', order : this.order})
+        removeRecipeItem(value){
+            this.$swal.fire({
+                title: "Emin Misiniz?",
+                icon: 'question',
+                showCancelButton: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let data = this.recipeData.find(item => item.order === value)
+                    this.recipeData.splice(this.recipeData.indexOf(data), 1)
+                }
+            })
         }
     },
-    emits: ['action']
 }
 </script>
 
