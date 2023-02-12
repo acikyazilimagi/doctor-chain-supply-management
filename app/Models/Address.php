@@ -17,6 +17,7 @@ class Address extends Model
         'city',
         'district',
         'neighbourhood',
+        'address_detail',
     ];
 
     public function city()

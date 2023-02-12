@@ -59,6 +59,7 @@ class RecipeController extends Controller
                 $recipe->address()->create([
                     'city' => $request->get('address')['city'],
                     'district' => $request->get('address')['district'],
+                    'address_detail' => $request->get('address')['address_detail'],
                     'neighbourhood' => $request->get('address')['neighbourhood'],
                     'model_class' => $recipe::class,
                 ]);

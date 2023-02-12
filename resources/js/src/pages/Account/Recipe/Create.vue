@@ -288,9 +288,9 @@ export default {
                         title: this.title,
                         items: this.items,
                         address:this.address,
-                        address_detail: this.address_detail,
                         description: this.description,
                     }
+                    data.address.address_detail = this.address_detail
                     await $this.axios.post('/api/account/recipes', data)
                         .then((response) => {
                             if (response.status) {

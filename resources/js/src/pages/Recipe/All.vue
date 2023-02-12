@@ -11,6 +11,7 @@
                 <div style="padding: 15px">
                     <div class="row">
                         <p>{{ item.description }}</p>
+                        <p>Adres Detayı : {{ item.address.address_detail }}</p>
                     </div>
                     <div class="row">
                         <div class="col-8">

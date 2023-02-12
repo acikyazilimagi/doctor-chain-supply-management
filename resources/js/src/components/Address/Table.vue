@@ -23,7 +23,7 @@ export default {
     name: "Address.Table",
     props: {
         city: {
-            type: [String, Number, null],
+            type: [String, Number, null, Object],
             required: true
         },
         district: {
@@ -31,7 +31,7 @@ export default {
             required: true
         },
         neighbourhood: {
-            type: [String, Number, null],
+            type: [String, Number, null, Object],
             required: true
         },
     }

@@ -43,5 +43,9 @@ class Recipe extends Model
                 $query->created_by = auth()->user()->id;
             }
         });
+
+        static::deleting(function ($item) {
+            $item->address->delete();
+        });
     }
 }
