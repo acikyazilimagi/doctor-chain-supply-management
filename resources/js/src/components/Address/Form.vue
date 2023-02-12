@@ -2,7 +2,7 @@
     <div class="row mb-3">
         <div class="col-12">
             <select v-model="city_data" name="city" id="city" class="form-control" @change="onCityChanged">
-                <option :value="null">İl Seçiniz</option>
+                <option :value="null">{{ $t('modules.recipe.form.city.selectTitle') }}</option>
                 <option v-for="cit in cities" :key="'city_' + cit.id" :value="cit.id">{{ cit.name }}</option>
             </select>
         </div>
@@ -11,7 +11,7 @@
     <div class="row mb-3">
         <div class="col-12">
             <select v-model="district_data" name="district" id="district" class="form-control" @change="onDistrictChanged">
-                <option :value="null">İlçe Seçiniz</option>
+                <option :value="null">{{ $t('modules.recipe.form.district.selectTitle') }}</option>
                 <option v-for="dis in districts" :key="'district_' + dis.id" :value="dis.name">{{ dis.name }}</option>
             </select>
         </div>
@@ -20,7 +20,7 @@
     <div class="row mb-3">
         <div class="col-12">
             <select v-model="neighbourhood_data" name="neighbourhood" id="neighbourhood" class="form-control" @change="onNeighbourhoodChanged">
-                <option :value="null">Mahalle Seçiniz</option>
+                <option :value="null">{{ $t('modules.recipe.form.neighbourhood.selectTitle') }}</option>
                 <option v-for="nei in neighbourhoods" :key="'neighbourhood_' + nei.id" :value="nei.id">{{ nei.name }}</option>
             </select>
         </div>
@@ -72,7 +72,7 @@ export default {
                     this.cities = response.data.data
                 })
                 .catch((e) => {
-                    this.$swal.fire('Hata', e.response.data.message, 'error')
+                    this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                 })
         },
         async onCityChanged(){
@@ -85,7 +85,7 @@ export default {
                     this.districts = response.data.data
                 })
                 .catch((e) => {
-                    this.$swal.fire('Hata', e.response.data.message, 'error')
+                    this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                 })
         },
         async onDistrictChanged(){
@@ -96,7 +96,7 @@ export default {
                     this.neighbourhoods = response.data.data
                 })
                 .catch((e) => {
-                    this.$swal.fire('Hata', e.response.data.message, 'error')
+                    this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                 })
         },
         onNeighbourhoodChanged(){

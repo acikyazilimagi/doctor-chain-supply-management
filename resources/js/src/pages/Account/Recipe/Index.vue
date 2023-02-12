@@ -1,6 +1,6 @@
 <template>
     <div class="col-12">
-        <h1>Tüm İlaç İsteklerim</h1>
+        <h1>{{ $t('modules.recipe.title.all_my_recipes') }}</h1>
         <List :recipes="recipes" />
     </div>
 </template>
@@ -29,7 +29,7 @@ export default {
                     $this.recipes = response.data.data
                 })
                 .catch((e) => {
-                    this.$swal.fire('Hata', e.response.data.message, 'error')
+                    this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                 })
         }
     }

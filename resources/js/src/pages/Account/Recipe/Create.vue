@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">İlaç İste</div>
+                    <div class="card-header">{{ $t('modules.recipe.title.create_recipe') }}</div>
 
                     <div class="card-body">
 
@@ -86,7 +86,7 @@
 
                         <div class="row mb-0">
                             <div class="col-12">
-                                <button type="button" @click.prevent="save" class="btn btn-primary col-12">Kaydet</button>
+                                <button type="button" @click.prevent="save" class="btn btn-primary col-12">{{ $t('general.save') }}</button>
                             </div>
                         </div>
                     </div>
@@ -138,10 +138,10 @@ export default {
                 validation_attributes: {
                     title: "İstek Başlığı",
                     description: "Detaylı Not",
-                    city: "İl",
-                    district: "İlçe",
-                    neighbourhood: "Mahalle",
-                    address_detail: "Adres Detayı",
+                    city: this.$t('modules.recipe.form.city.title'),
+                    district: this.$t('modules.recipe.form.city.district'),
+                    neighbourhood: this.$t('modules.recipe.form.city.neighbourhood'),
+                    address_detail: this.$t('modules.recipe.form.city.address_detail'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
             },
@@ -237,8 +237,8 @@ export default {
             }
 
             $this.$swal.fire({
-                title: 'Emin Misiniz?',
-                html: '<strong class="text-danger">İsteklerinizi güncelleyemeyeceksiniz !</strong>',
+                title: this.$t('general.are_you_sure'),
+                html: `<strong class="text-danger">${ this.$t('modules.account.create.you_will_not_update') }</strong>`,
                 showCancelButton: true,
             }).then(async (result) => {
                 if (result.isConfirmed) {
@@ -254,9 +254,9 @@ export default {
                         .then((response) => {
                             if (response.status) {
                                 this.reset()
-                                this.$swal.fire('Başarılı', response.data.message, 'success')
+                                this.$swal.fire(this.$t('general.success'), response.data.message, 'success')
                             } else {
-                                this.$swal.fire('Hata', response.data.message, 'danger')
+                                this.$swal.fire(this.$t('general.error'), response.data.message, 'danger')
                             }
                         })
                         .catch((e) => {
@@ -264,7 +264,7 @@ export default {
                                 state.validationProp.errors = e.data.errors
                                 state.validationProp.message = e.data.message
                             } else {
-                                this.$swal.fire('Hata', e.response.data.message, 'error')
+                                this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                             }
                         })
                 }

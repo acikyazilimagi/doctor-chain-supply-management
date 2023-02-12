@@ -11,7 +11,7 @@
                 <div style="padding: 15px">
                     <div class="row">
                         <p>{{ item.description }}</p>
-                        <p>Adres Detayı : {{ item.address.address_detail }}</p>
+                        <p>{{ $t('modules.recipe.address_detail.title') }} : {{ item.address.address_detail }}</p>
                     </div>
                     <div class="row">
                         <div class="col-8">
@@ -76,7 +76,7 @@ export default {
                 })
                 .catch((e) => {
                     $this.loading = false;
-                    this.$swal.fire('Hata', e.response.data.message, 'error')
+                    this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                 })
         }
     }

@@ -6,8 +6,8 @@
             </div>
             <div class="col-3">
                 <ul class="list-group">
-                    <li class="list-group-item"><router-link :to="{ name: 'Account.Profile.Index' }">Hesap Bilgilerim</router-link></li>
-                    <li class="list-group-item"><router-link :to="{ name: 'Account.Profile.Edit' }">Bilgilerimi Güncelle</router-link></li>
+                    <li class="list-group-item"><router-link :to="{ name: 'Account.Profile.Index' }">{{ $t('header.account_info') }}</router-link></li>
+                    <li class="list-group-item"><router-link :to="{ name: 'Account.Profile.Edit' }">{{ $t('header.update_account_info') }}</router-link></li>
                 </ul>
             </div>
         </div>

@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">Hesabı Güncelle</div>
+                <div class="card-header">{{ $t('modules.account.edit.title') }}</div>
 
                 <div class="card-body">
                     <div class="row">
@@ -13,7 +13,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label for="specialty" class="col-md-4 col-form-label text-md-end">Uzmanlık</label>
+                        <label for="specialty" class="col-md-4 col-form-label text-md-end">{{ $t('modules.recipe.form.specialty.title') }}</label>
 
                         <div class="col-md-6">
                             <select
@@ -28,7 +28,7 @@
                                 @input="vuelidate$.specialty.$touch()"
                                 @focus="vuelidate$.specialty.$touch()"
                             >
-                                <option :value="null">Seçiniz</option>
+                                <option :value="null">{{ $t('general.select') }}</option>
                                 <option v-for="s in specialties" :value="s.id" :key="'specialty_' + s.id">{{ s.name }}</option>
                             </select>
                             <SingleInputError :vuelidate-object="vuelidate$.specialty" />
@@ -37,7 +37,7 @@
 
                     <div class="row mb-0">
                         <div class="col-md-6 offset-md-4">
-                            <button type="button" class="btn btn-primary" @click.prevent="update">Güncelle</button>
+                            <button type="button" class="btn btn-primary" @click.prevent="update">{{ $t('general.update') }}</button>
                         </div>
                     </div>
                 </div>
@@ -127,7 +127,7 @@ export default {
                     $this.specialties = response.data.data
                 })
                 .catch((e) => {
-                    $this.$swal.fire('Hata', e.response.data.message, 'error')
+                    $this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                 })
         },
         async update(e) {
@@ -148,7 +148,7 @@ export default {
             formData.append('specialty', this.specialty)
 
             $this.$swal.fire({
-                title: 'Bilgilerinizin Doğruluğundan Emin Misiniz?',
+                title: this.$t('modules.account.edit.are_you_sure'),
                 showCancelButton: true,
             }).then(async (result) => {
                 if (result.isConfirmed) {
@@ -156,9 +156,9 @@ export default {
                         .then((response) => {
                             if (response.status) {
                                 this.resetUser()
-                                this.$swal.fire('Başarılı', response.data.message, 'success')
+                                this.$swal.fire(this.$t('general.success'), response.data.message, 'success')
                             } else {
-                                this.$swal.fire('Hata', response.data.message, 'danger')
+                                this.$swal.fire(this.$t('general.error'), response.data.message, 'danger')
                             }
                         })
                         .catch((e) => {
@@ -166,7 +166,7 @@ export default {
                                 state.validationProp.errors = e.data.errors
                                 state.validationProp.message = e.data.message
                             } else {
-                                this.$swal.fire('Hata', e.response.data.message, 'error')
+                                this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                             }
                         })
                 }
