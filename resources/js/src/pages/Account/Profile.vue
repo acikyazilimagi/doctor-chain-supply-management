@@ -19,7 +19,7 @@
         <div v-for="referral_link in referral_links" class="accordion-item">
             <h2 class="accordion-header" :id="'referral_link_' + referral_link.id">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#referral_link_container_' + referral_link.id" aria-expanded="false" :aria-controls="'referral_link_container_' + referral_link.id">
-                    <span class="badge bg-warning me-2">{{ referral_link.count }}</span>
+<!--                    <span class="badge bg-warning me-2">{{ referral_link.count }}</span>-->
                     <span>{{ referral_link.code }}</span>
                 </button>
             </h2>

@@ -66,7 +66,7 @@ class AuthController
             ReferralLink::create([
                 'user_id' => $user->id,
                 'code' => strtoupper(Str::random()),
-                'count' => 5,
+                'count' => 50000,
             ]);
 
             event(new Registered($user));
@@ -94,6 +94,8 @@ class AuthController
             'email' => 'required|email',
             'password' => 'required'
         ]);
+
+        $credentials['verified'] = true;
 
         if (!$this->guard()->attempt($credentials)) {
             return response()->json([
