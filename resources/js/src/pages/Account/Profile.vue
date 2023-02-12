@@ -2,15 +2,15 @@
     <table class="table table-bordered">
         <tbody>
             <tr>
-                <td>Adı</td>
+                <td>{{ $t('modules.account.referral.name') }}</td>
                 <td>{{ user.name }}</td>
             </tr>
             <tr>
-                <td>E-Posta</td>
+                <td>{{ $t('modules.account.referral.email') }}</td>
                 <td>{{ user.email }}</td>
             </tr>
             <tr>
-                <td>Uzmanlık</td>
+                <td>{{ $t('modules.account.referral.specialty') }}</td>
                 <td>{{ user.specialty?.name }}</td>
             </tr>
         </tbody>
@@ -27,13 +27,13 @@
                 <div class="accordion-body">
                     <h4 class="text-danger fw-bold my-2 d-block">{{ generateReferralLink(referral_link.code) }}</h4>
 
-                    <h5 class="text-success ms-auto fw-bold">Referans Olunan Kişiler</h5>
+                    <h5 class="text-success ms-auto fw-bold">{{ $t('modules.account.referral.referenced_persons') }}</h5>
 
                     <ul class="list-group">
                         <li class="list-group-item" v-for="user in referral_link.users" :key="'user_' + user.id">
                             <span class="d-flex">{{ user.email }} - {{ user.name }}</span>
-                            <span v-if="user.verified" class="text-success">Onaylı</span>
-                            <button v-else class="btn btn-ssm btn-info ms-auto d-flex" @click.prevent="verifyFriend(user)">Arkadaşımı Onayla</button>
+                            <span v-if="user.verified" class="text-success">{{ $t('general.verified') }}</span>
+                            <button v-else class="btn btn-ssm btn-info ms-auto d-flex" @click.prevent="verifyFriend(user)">{{ $t('modules.account.referral.confirm_my_friend') }}</button>
                         </li>
                     </ul>
                 </div>

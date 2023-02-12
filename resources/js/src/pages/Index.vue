@@ -37,7 +37,7 @@ export default {
                     $this.recipes = response.data.data
                 })
                 .catch((e) => {
-                    this.$swal.fire('Hata', e.response.data.message, 'error')
+                    this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                 })
         }
     }

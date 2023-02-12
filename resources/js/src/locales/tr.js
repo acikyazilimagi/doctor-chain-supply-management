@@ -27,6 +27,7 @@ const tr = {
         delete: 'Sil',
         edit: 'Düzenle',
         selected: 'Seçili',
+        verified: 'Onaylı',
         delete_selected: 'Seçilenleri Sil',
         created_at: 'Oluşturulma Zamanı',
         updated_at: 'Güncellenme Zamanı',
@@ -37,6 +38,19 @@ const tr = {
         retrieving_data: 'Veriler Alınıyor...',
         saving: 'Kaydediliyor...',
         loading: 'Yükleniyor...',
+        register: 'Kayıt Ol',
+        login: 'Giriş Yap',
+        reset: 'Temizle',
+        are_you_sure: 'Emin Misiniz?',
+    },
+    header: {
+        project_name: 'ABC Projesi',
+        all_recipes: 'Tüm İstekleri Listele',
+        create_recipe: 'İlaç İste',
+        all_my_recipes: 'Tüm İsteklerim',
+        my_account: 'Hesabım',
+        account_info: 'Hesap Bilgilerim',
+        update_account_info: 'Bilgilerimi Güncelle',
     },
     modules: {
         auth: {
@@ -63,18 +77,27 @@ const tr = {
                     },
                     legal_text: {
                         title: 'Aydınlatma Metni',
+                        placeholder: 'Aydınlatma Metni\'ni okudum ve kabul ediyorum'
                     },
                     kvkk_text: {
                         title: 'KVKK Metni',
+                        placeholder: 'KVKK Metni\'ni okudum ve kabul ediyorum'
                     },
                     referral_code: {
                         title: 'Referans Kodu',
                         placeholder: 'Lütfen size gelen referans kodunu giriniz.'
                     },
+                    remember: {
+                        title: 'Beni hatırla'
+                    },
                 }
             }
         },
         recipe: {
+            title: {
+                all_my_recipes: 'Tüm İlaç İsteklerim',
+                create_recipe: 'İlaç İste',
+            },
             form: {
                 title: {
                     title: 'Başlık',
@@ -86,22 +109,44 @@ const tr = {
                 },
                 city: {
                     title: 'İl',
+                    selectTitle: 'İl Seçiniz',
                     placeholder: 'Lütfen il seçiniz.'
                 },
                 district: {
                     title: 'İlçe',
+                    selectTitle: 'İlçe Seçiniz',
                     placeholder: 'Lütfen ilçe seçiniz.'
                 },
                 neighbourhood: {
                     title: 'Mahalle',
+                    selectTitle: 'Mahalle Seçiniz',
                     placeholder: 'Lütfen mahalle seçiniz.'
                 },
                 address_detail: {
                     title: 'Adres Detayı',
                     placeholder: 'Adresi kolayca bulabilmek için detaylı açıklama yazabilirsiniz.'
                 },
+                specialty: {
+                    title: '@:general.modules.auth.register.form.specialty.title'
+                },
             },
         },
+        account: {
+            edit: {
+                title: 'Hesabı Güncelle',
+                are_you_sure: 'Bilgilerinizin Doğruluğundan Emin Misiniz?'
+            },
+            create: {
+                you_will_not_update: 'İsteklerinizi güncelleyemeyeceksiniz !'
+            },
+            referral: {
+                name: '@:general.modules.auth.register.form.name.title',
+                email: '@:general.modules.auth.register.form.email.title',
+                specialty: '@:general.modules.auth.register.form.specialty.title',
+                referenced_persons: 'Referans Olunan Kişiler',
+                confirm_my_friend: 'Arkadaşımı Onayla'
+            }
+        }
     },
 }
 

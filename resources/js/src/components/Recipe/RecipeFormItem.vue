@@ -7,7 +7,7 @@
                 </div>
                 <div class="col-3">
                     <select name="category_id" id="category_id" v-model="item.category_id" class="form-control">
-                        <option :value="null">Seçiniz</option>
+                        <option :value="null">{{ $t('general.select') }}</option>
                         <option v-for="category in categories" :value="category.id" :key="'category_' + category.id">{{ category.value }}</option>
                     </select>
                 </div>
@@ -57,7 +57,7 @@ export default {
                     this.categories = response.data.data
                 })
                 .catch((e) => {
-                    this.$swal.fire('Hata', e.response.data.message, 'error')
+                    this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                 })
         },
         update(){
@@ -81,7 +81,7 @@ export default {
         },
         removeRecipeItem(value){
             this.$swal.fire({
-                title: "Emin Misiniz?",
+                title: this.$t('general.are_you_sure'),
                 icon: 'question',
                 showCancelButton: true,
             }).then((result) => {

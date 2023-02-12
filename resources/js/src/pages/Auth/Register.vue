@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Kayıt</div>
+                <div class="card-header">{{ $t('general.register') }}</div>
 
                 <div class="card-body">
                    <div class="row">
@@ -12,7 +12,7 @@
 
                    </div>
                     <div class="row mb-3">
-                        <label for="name" class="col-md-4 col-form-label text-md-end">Ad</label>
+                        <label for="name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.name.title') }}</label>
 
                         <div class="col-md-6">
                             <input
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label for="email" class="col-md-4 col-form-label text-md-end">E-Posta</label>
+                        <label for="email" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.email.title') }}</label>
 
                         <div class="col-md-6">
                             <input
@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label for="password" class="col-md-4 col-form-label text-md-end">Parola</label>
+                        <label for="password" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.password.title') }}</label>
 
                         <div class="col-md-6">
                             <input
@@ -78,7 +78,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label for="password-confirm" class="col-md-4 col-form-label text-md-end">Parola (Tekrar)</label>
+                        <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.password_confirmation.title') }}</label>
 
                         <div class="col-md-6">
                             <input
@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label for="specialty" class="col-md-4 col-form-label text-md-end">Uzmanlık</label>
+                        <label for="specialty" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.specialty.title') }}</label>
 
                         <div class="col-md-6">
                             <select
@@ -115,7 +115,7 @@
                                 @input="vuelidate$.specialty.$touch()"
                                 @focus="vuelidate$.specialty.$touch()"
                             >
-                                <option :value="null">Seçiniz</option>
+                                <option :value="null">{{ $t('general.select') }}</option>
                                 <option v-for="s in specialties" :value="s.id" :key="'specialty_' + s.id">{{ s.name }}</option>
                             </select>
                             <SingleInputError :vuelidate-object="vuelidate$.specialty" />
@@ -123,7 +123,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label for="name" class="col-md-4 col-form-label text-md-end">Referans Kodu</label>
+                        <label for="name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.referral_code.title') }}</label>
 
                         <div class="col-md-6">
                             <input
@@ -161,7 +161,7 @@
                                     @focus="vuelidate$.legal_text.$touch()"
                                 >
 
-                                <label class="form-check-label" for="legal_text">Aydınlatma Metni'ni okudum ve kabul ediyorum</label>
+                                <label class="form-check-label" for="legal_text">{{ $t('modules.auth.register.form.legal_text.placeholder') }}</label>
                             </div>
                         </div>
                     </div>
@@ -183,15 +183,15 @@
                                     @focus="vuelidate$.kvkk_text.$touch()"
                                 >
 
-                                <label class="form-check-label" for="kvkk_text">KVKK Metni'ni okudum ve kabul ediyorum</label>
+                                <label class="form-check-label" for="kvkk_text">{{ $t('modules.auth.register.form.kvkk_text.placeholder') }}</label>
                             </div>
                         </div>
                     </div>
 
                     <div class="row mb-0">
                         <div class="col-md-6 offset-md-4">
-                            <button type="button" class="btn btn-danger me-auto" @click.prevent="reset">Temizle</button>
-                            <button type="button" class="btn btn-primary" @click.prevent="register">Kayıt Ol</button>
+                            <button type="button" class="btn btn-danger me-auto" @click.prevent="reset">{{ $t('general.reset') }}</button>
+                            <button type="button" class="btn btn-primary" @click.prevent="register">{{ $t('general.register') }}</button>
                         </div>
                     </div>
                 </div>
@@ -339,7 +339,7 @@ export default {
                     $this.specialties = response.data.data
                 })
                 .catch((e) => {
-                    $this.$swal.fire('Hata', e.response.data.message, 'error')
+                    $this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                 })
         },
         reset() {
@@ -380,7 +380,7 @@ export default {
             }
 
             $this.$swal.fire({
-                title: 'Bilgilerinizin Doğruluğundan Emin Misiniz?',
+                title: this.$t('modules.account.edit.are_you_sure'),
                 showCancelButton: true,
             }).then(async (result) => {
                 if (result.isConfirmed) {
@@ -401,7 +401,7 @@ export default {
                                 state.validationProp.errors = e.data.errors
                                 state.validationProp.message = e.data.message
                             } else {
-                                this.$swal.fire('Hata', e.response.data.message, 'error')
+                                this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
                             }
                         })
                 }
