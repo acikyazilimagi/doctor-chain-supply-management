@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title')->index();
             $table->string('description')->nullable();
             $table->integer('created_by');
-            $table->boolean('supported')->default(false);
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

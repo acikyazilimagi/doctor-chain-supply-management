@@ -7,6 +7,10 @@
             :headers="headers"
             :items="items"
         >
+            <template #item-status="item">
+                <span class="badge me-2" :class="{'bg-success': item.status, 'bg-warning': !item.status}">{{ item.status ? 'Karşılandı' : 'Bekliyor' }}</span>
+                <span v-if="!item.status && user && item.created_by !== user.id" class="btn btn-sm btn-success" @click.prevent="support(item)">Karşıla</span>
+            </template>
             <template #expand="item">
                 <div style="padding: 15px">
                     <div class="row">
@@ -32,6 +36,7 @@
 <script>
 import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
+import { support } from '@/src/helpers.js'
 import AddressTable from "@/src/components/Address/Table.vue";
 
 export default {
@@ -52,6 +57,7 @@ export default {
             },
             headers: [
                 { text: "Başlık", value: "title" },
+                { text: "Destek Durumu", value: "status" },
             ],
             items: [],
         }
@@ -65,6 +71,7 @@ export default {
         }
     },
     methods: {
+        support,
         async prepareData(){
             const $this = this
             $this.loading = true;

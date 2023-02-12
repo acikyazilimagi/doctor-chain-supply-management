@@ -7,6 +7,7 @@
 
 <script>
 import List from "@/src/components/Recipe/List.vue";
+import emitter from '@/EventBus.js'
 
 export default {
     name: "Account.Recipe.Index",
@@ -20,6 +21,7 @@ export default {
     },
     created() {
         this.prepareData()
+        emitter.on('support-saved', () => this.prepareData())
     },
     methods: {
         async prepareData(){

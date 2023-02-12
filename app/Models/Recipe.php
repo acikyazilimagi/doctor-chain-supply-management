@@ -13,6 +13,7 @@ class Recipe extends Model
         'title',
         'description',
         'created_by',
+        'status'
     ];
 
     public function items()
