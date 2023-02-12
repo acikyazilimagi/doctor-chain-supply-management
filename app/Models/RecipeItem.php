@@ -33,7 +33,7 @@ class RecipeItem extends Model
             ],
             [
                 "id" => 3,
-                "value" => "Doktor",
+                "value" => "Doktor Destegi",
             ],
             [
                 "id" => 4,

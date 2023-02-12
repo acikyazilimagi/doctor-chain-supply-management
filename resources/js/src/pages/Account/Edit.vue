@@ -13,6 +13,28 @@
                     </div>
 
                     <div class="row mb-3">
+                        <label for="name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.name.title') }}</label>
+
+                        <div class="col-md-6">
+                            <input
+                                id="name"
+                                type="text"
+                                v-model="name"
+                                class="form-control"
+                                name="name"
+                                :placeholder="$t('modules.auth.register.form.name.placeholder')"
+                                :class="{
+                                    'is-invalid': vuelidate$.name.$error,
+                                    'is-valid': vuelidate$.name.$dirty && !vuelidate$.name.$invalid,
+                                }"
+                                @input="vuelidate$.name.$touch()"
+                                @focus="vuelidate$.name.$touch()"
+                            >
+                            <SingleInputError :vuelidate-object="vuelidate$.name" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
                         <label for="specialty" class="col-md-4 col-form-label text-md-end">{{ $t('modules.recipe.form.specialty.title') }}</label>
 
                         <div class="col-md-6">
@@ -53,8 +75,9 @@ import SingleInputError from "@/src/components/ValidationMessages/SingleInputErr
 import useVuelidate from '@vuelidate/core'
 
 import {
+    maxLength,
+    minLength,
     required,
-    requiredIf,
 } from '@vuelidate/validators'
 import {mapActions} from "vuex";
 
@@ -71,6 +94,7 @@ export default {
             form_is_posting: false,
             form_is_posted: false,
 
+            name: null,
             specialty: null,
 
             specialties: [],
@@ -79,6 +103,7 @@ export default {
                 errors: [],
                 message: '',
                 validationAttributes: {
+                    name: this.$t('modules.auth.register.form.name.title'),
                     specialty: this.$t('modules.auth.register.form.specialty.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
@@ -87,6 +112,7 @@ export default {
     },
     created() {
         this.prepareSpecialties()
+        this.name = this.user.name
         this.specialty = this.user.specialty.id
     },
     computed: {
@@ -106,6 +132,13 @@ export default {
     },
     validations() {
         return {
+            name: {
+                minLength: minLength(2),
+                maxLength: maxLength(30),
+                required,
+                $autoDirty: true,
+                $lazy: true,
+            },
             specialty: {
                 required,
                 $autoDirty: true,
@@ -143,16 +176,17 @@ export default {
                 return
             }
 
-            const headers = { 'Content-Type': 'multipart/form-data' };
-            let formData = new FormData()
-            formData.append('specialty', this.specialty)
+            const data = {
+                name: this.name,
+                specialty: this.specialty,
+            }
 
             $this.$swal.fire({
                 title: this.$t('modules.account.edit.are_you_sure'),
                 showCancelButton: true,
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await $this.axios.post('/api/account/update', formData, { headers })
+                    await $this.axios.post('/api/account/update', data)
                         .then((response) => {
                             if (response.status) {
                                 this.resetUser()
