@@ -24,7 +24,7 @@
                             </ul>
                         </div>
                         <div class="col-4">
-                            <AddressTable />
+                            <AddressTable v-if="recipe.address" :city="recipe.address.city" :district="recipe.address.district" :neighbourhood="recipe.address.neighbourhood" />
                         </div>
                     </div>
                 </div>

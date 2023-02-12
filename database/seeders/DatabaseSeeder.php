@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             SpecialtySeeder::class,
+            \Epigra\TrGeoZones\Database\Seeders\TrGeoZonesDatabaseSeeder::class
         ]);
     }
 }

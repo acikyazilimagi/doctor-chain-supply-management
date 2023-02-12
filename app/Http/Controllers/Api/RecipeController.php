@@ -11,18 +11,39 @@ class RecipeController extends Controller
 {
     public function my(){
 
-        $recipes = Recipe::where(['created_by' => auth()->user()->id])->with(['items'])->orderByDesc('id')->get();
+        $recipes = Recipe::
+            where(['created_by' => auth()->user()->id])
+            ->with([
+                'items',
+                'address'
+            ])
+            ->orderByDesc('id')
+            ->get();
 
         return response()->json(['data' => $recipes]);
     }
 
     public function latests(){
-        $recipes = Recipe::with(['items'])->orderByDesc('id')->latest()->take(100)->get();
+        $recipes = Recipe::
+            with([
+                'items',
+                'address'
+            ])
+            ->orderByDesc('id')
+            ->latest()
+            ->take(100)
+            ->get();
         return response()->json(['data' => $recipes]);
     }
 
     public function all(){
-        $recipes = Recipe::with(['items'])->orderByDesc('id')->paginate(100000);
+        $recipes = Recipe::
+             with([
+                'items',
+                'address'
+            ])
+            ->orderByDesc('id')
+            ->paginate(100000);
         return response()->json(['data' => $recipes]);
     }
 
@@ -35,6 +56,12 @@ class RecipeController extends Controller
             ]);
 
             if ($recipe){
+                $recipe->address()->create([
+                    'city' => $request->get('address')['city'],
+                    'district' => $request->get('address')['district'],
+                    'neighbourhood' => $request->get('address')['neighbourhood'],
+                    'model_class' => $recipe::class,
+                ]);
                 $items = collect($request->get('items'))->map(fn($item) => ['recipe_id' => $recipe->id, 'name' => $item['text'], 'count' => $item['count'], 'category_id' => $item['category_id']]);
                 $recipe->items()->insert($items->toArray());
             }

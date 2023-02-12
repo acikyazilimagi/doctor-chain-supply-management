@@ -23,7 +23,7 @@
                             </ul>
                         </div>
                         <div class="col-4">
-                            <AddressTable />
+                            <AddressTable v-if="item.address" :city="item.address.city" :district="item.address.district" :neighbourhood="item.address.neighbourhood" />
                         </div>
                     </div>
                 </div>

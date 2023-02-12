@@ -3,15 +3,15 @@
         <tbody>
         <tr>
             <td>İl</td>
-            <td>Hatay</td>
+            <td>{{ city?.name }}</td>
         </tr>
         <tr>
             <td>İlçe</td>
-            <td>İskenderun</td>
+            <td>{{ district }}</td>
         </tr>
         <tr>
             <td>Mahalle</td>
-            <td>Örnek</td>
+            <td>{{ neighbourhood?.name }}</td>
         </tr>
         </tbody>
     </table>
@@ -21,6 +21,20 @@
 
 export default {
     name: "Address.Table",
+    props: {
+        city: {
+            type: [String, Number, null],
+            required: true
+        },
+        district: {
+            type: [String, Number, null],
+            required: true
+        },
+        neighbourhood: {
+            type: [String, Number, null],
+            required: true
+        },
+    }
 }
 </script>
 

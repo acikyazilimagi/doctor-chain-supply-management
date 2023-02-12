@@ -30,6 +30,12 @@ Route::group(['prefix' => 'specialties', 'as' => 'specialty.'], function (){
     Route::get('/', [\App\Http\Controllers\Api\SpecialtyController::class, 'index'])->name('index');
 });
 
+Route::group(['prefix' => 'address', 'as' => 'address.'], function (){
+    Route::get('/cities', [\App\Http\Controllers\Api\AddressController::class, 'cities'])->name('cities');
+    Route::get('/districts/{city}', [\App\Http\Controllers\Api\AddressController::class, 'districts'])->name('districts');
+    Route::get('/neighbourhoods/{city}/{district}', [\App\Http\Controllers\Api\AddressController::class, 'neighbourhoods'])->name('neighbourhoods');
+});
+
 Route::group(['prefix' => 'account', 'as' => 'account.'], function (){
     Route::post('/update', [\App\Http\Controllers\Api\AccountController::class, 'update'])->name('update')->middleware('auth:sanctum');
 

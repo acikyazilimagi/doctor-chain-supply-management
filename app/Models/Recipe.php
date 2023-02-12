@@ -22,6 +22,18 @@ class Recipe extends Model
         return $this->hasMany(RecipeItem::class);
     }
 
+    public function address()
+    {
+        return $this
+            ->hasOne(Address::class, 'model_id', 'id')
+            ->where(['model_class' => self::class])
+            ->with([
+                'city',
+                'neighbourhood'
+            ])
+        ;
+    }
+
     protected static function boot()
     {
         parent::boot();
