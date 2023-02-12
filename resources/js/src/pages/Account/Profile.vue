@@ -30,7 +30,11 @@
                     <h5 class="text-success ms-auto fw-bold">Referans Olunan Kişiler</h5>
 
                     <ul class="list-group">
-                        <li class="list-group-item" v-for="user in referral_link.users" :key="'user_' + user.id">{{ user.email }} - {{ user.name }}</li>
+                        <li class="list-group-item" v-for="user in referral_link.users" :key="'user_' + user.id">
+                            <span class="d-flex">{{ user.email }} - {{ user.name }}</span>
+                            <span v-if="user.verified" class="text-success">Onaylı</span>
+                            <button v-else class="btn btn-ssm btn-info ms-auto d-flex" @click.prevent="verifyFriend(user)">Arkadaşımı Onayla</button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -59,8 +63,8 @@ export default {
         async prepareReferralLinks(){
             await axios
                 .get('/api/account/referral-links')
-                .then((respone)=>{
-                    this.referral_links = respone.data.data
+                .then((response)=>{
+                    this.referral_links = response.data.data
                 }).catch(({response})=>{
                     if(response.status===422){
                         this.validationErrors = response.data.errors
@@ -68,6 +72,20 @@ export default {
                         this.validationErrors = {}
                         alert(response.data.message)
                     }
+                })
+        },
+        async verifyFriend(user){
+            await axios
+                .post('/api/account/referral-links/verify-friend', {
+                    id: user.id
+                })
+                .then((response)=>{
+                    if (response.status) {
+                        this.prepareReferralLinks()
+                    }
+                    this.$swal.fire(response.data.message.title, response.data.message.body, response.data.message.type)
+                }).catch((e)=>{
+                    this.$swal.fire('Hata', e.response.data.message, 'error')
                 })
         },
         generateReferralLink(code){

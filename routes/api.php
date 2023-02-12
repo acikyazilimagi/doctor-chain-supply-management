@@ -46,5 +46,6 @@ Route::group(['prefix' => 'account', 'as' => 'account.'], function (){
 
     Route::group(['prefix' => 'referral-links', 'as' => 'referral_link.'], function (){
         Route::get('/', [\App\Http\Controllers\Api\ReferralLinkController::class, 'my_codes'])->name('my_codes');
+        Route::post('/verify-friend', [\App\Http\Controllers\Api\ReferralLinkController::class, 'verify_friend'])->name('verify_friend');
     });
 })->middleware('auth:sanctum');;

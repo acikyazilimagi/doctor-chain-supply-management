@@ -56,6 +56,7 @@ class AuthController
             'kvkk_text' => $data['kvkk_text'],
             'specialty' => $data['specialty'],
             'referral_link_code' => $referral_code->code,
+            'verified' => false,
         ]);
 
         if ($user) {

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'specialty',
+        'verified',
         'legal_text',
         'kvkk_text',
         'referral_link_code',
