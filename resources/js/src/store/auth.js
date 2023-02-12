@@ -5,7 +5,7 @@ export default {
     namespaced: true,
     state:{
         authenticated:false,
-        user:{}
+        user: null
     },
     getters:{
         authenticated(state){
