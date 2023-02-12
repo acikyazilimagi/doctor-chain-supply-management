@@ -40,6 +40,7 @@ class SpecialtySeeder extends Seeder
             ['name' => "Nöroloji"],
             ['name' => "FTR"],
             ['name' => "Psikiyatri"],
+            ['name' => "Pratisyen"],
         ];
         Specialty::insert($specialities);
     }

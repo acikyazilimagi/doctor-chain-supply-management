@@ -6,7 +6,7 @@
             </div>
 
             <div class="col-12 mt-3">
-                <h2 class="text-center text-danger my-5">Acil Destek Bekleyen İstekler</h2>
+                <h2 class="text-center text-danger my-5">Acil Destek Bekleyen İstekler (Son 100 Kayıt)</h2>
                 <List :recipes="recipes" @refresh_data="prepareData"/>
             </div>
         </div>
