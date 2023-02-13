@@ -130,41 +130,49 @@ class AuthController
     }
 
     /**
-     * PasswordStoreToken Token Store
+     * PasswordTokenGenerate Generate Token For Reset Password
      *
      * @param[string] email
      * @return \Illuminate\Http\JsonResponse
      *
      */
-    public function password_store_token(Request $request) {
-        $rules = [
-            'email' => 'required|string|email|exists:users'
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                "status" => false ,
-                "message" => [
-                    "title" => "Hata",
-                    "body" => $validator->errors(),
-                    "type" => "error",
-                ]
-            ]);
-        }
+    public function passwordTokenGenerate(Request $request) {
 
-        $user = User::where('email', $request['email'])->first();
+        $data = $request->validate([
+            'email' => 'required|string|email|exist:users'
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+
         if (!$user) {
-
             return response()->json([
                 "status" => false ,
                 "message" => [
                     "title" => "Hata",
-                    "body" => "Mail Adresi Bulunamadı!",
+                    "body" => "Mail adresi bulunamadı!",
                     "type" => "error",
                 ]
             ]);
         }
-        $resetpassword = ResetPassword::updateOrCreate(
+
+        $count = ResetPassword::where('email',$data['email'])->count();
+        if($count){
+            $record = ResetPassword::where('email',$data['email'])->last();
+            $lastGenTime = $record->created_at;
+            $differenceTime = Carbon::now()->timestamp - strtotime($lastGenTime);
+            if($differenceTime<180){
+                return response()->json([
+                    'status' => false,
+                    "message" => [
+                        "title" => "Hata!",
+                        "body" => "Zaten bir sıfırlama bağlantısı talebiniz mevcut. Lütfen e-posta kutunuzu kontrol edin.",
+                        "type" => "error",
+                    ]
+                ]);
+            }
+        }
+
+        $resetPassword = ResetPassword::updateOrCreate(
             [
                 'email' => $user->email,
             ],
@@ -173,34 +181,33 @@ class AuthController
                 'token' => Str::random(45),
             ]
         );
-        if ($user && $resetpassword) {
-            //Sıfırlama bağlantısı için $resetpassword->token olarak kullanabilirsiniz.
-            //TODO:: Maile Sıfırlama Linki Gönderilecek.
+        if ($user && $resetPassword) {
+            //TODO:: Maile Sıfırlama Linki Gönderilecek @param $resetpassword->token.
+            return response()->json([
+                'status' => true,
+                "message" => [
+                    "title" => "Başarılı",
+                    "body" => "Sıfırlama bağlantısı mailinize başarıyla gönderildi.",
+                    "type" => "success",
+                ]
+            ]);
         }
-        return response()->json([
-            'status' => true,
-            "message" => [
-                "title" => "Başarılı",
-                "body" => "Sıfırlama bağlantısı mailinize başarıyla gönderildi. Sıfırlama Bağlantısı: ".$resetpassword->token,
-                "type" => "success",
-            ]
-        ]);
     }
     /**
-     * Find Token
+     * If Click Link On Mail Check Token Status
      *
      * @param[string] token
      * @return \Illuminate\Http\JsonResponse
      *
      */
-    public function password_find_token($token) {
+    public function passwordTokenCheck($token) {
         $resetpassword = ResetPassword::where('token', $token)->first();
         if (!$token) {
             return response()->json([
                 "status" => false ,
                 "message" => [
                     "title" => "Hata",
-                    "body" => "Bağlantı Geçersiz",
+                    "body" => "Bağlantı geçersiz!",
                     "type" => "error",
                 ]
             ]);
@@ -211,7 +218,7 @@ class AuthController
                 "status" => false ,
                 "message" => [
                     "title" => "Hata",
-                    "body" => "Bağlantı Geçersiz",
+                    "body" => "Bağlantı geçersiz!",
                     "type" => "error",
                 ]
             ]);
@@ -220,13 +227,13 @@ class AuthController
             "status" => true ,
             "message" => [
                 "title" => "Başarılı",
-                "body" => $resetpassword,
+                "body" => '',
                 "type" => "success",
             ]
         ]);
     }
     /**
-     * ResetPassword Token Store
+     * PasswordResetWithToken Reset Password
      *
      * @param[string] email
      * @param[string] password
@@ -235,64 +242,66 @@ class AuthController
      * @return \Illuminate\Http\JsonResponse
      *
      */
-    public function password_reset(Request $request) {
-        $rules = [
+    public function passwordResetWithToken(Request $request) {
+        $data = $request->validate([
             'email' => 'required|string|email|exists:users',
             'token' => 'required|string',
-            'password' => 'required|string|min:6|confirmed',
-            'password_confirmation' => 'required|string|min:6',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                "status" => false ,
-                "message" => [
-                    "title" => "Hata",
-                    "body" => $validator->errors(),
-                    "type" => "error",
-                ]
-            ]);
-        }
-        $resetpassword = ResetPassword::updateOrCreate(
+            'password' => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required|string|min:8',
+        ]);
+
+        $resetPassword = ResetPassword::updateOrCreate(
             [
-                'email' => $request->email,
-                'token' => $request->token,
+                'email' => $data['email'],
+                'token' => $data['token'],
             ]
         )->first();
-        if (!$resetpassword) {
+        if (!$resetPassword) {
             return response()->json([
                 "status" => false ,
                 "message" => [
                     "title" => "Hata",
-                    "body" => "Mail Adresi Bulunamadı",
+                    "body" => "Mail adresi bulunamadı!",
                     "type" => "error",
                 ]
             ]);
         }
-        $user = User::where('email', $resetpassword->email)->first();
+        $user = User::where('email', $resetPassword->email)->first();
         if (!$user) {
             return response()->json([
                 "status" => false ,
                 "message" => [
                     "title" => "Hata",
-                    "body" => "Kullanıcı Bulunamadı",
+                    "body" => "Kullanıcı bulunamadı!",
                     "type" => "error",
                 ]
             ]);
         }
         $user->password = bcrypt($request->password);
-        $user->save();
-        $resetpassword->delete();
-        //Şifre değiştildiğine dair bağlantı için $resetpassword->token olarak kullanabilirsiniz.
-        //TODO:: Maile Sıfırlama Linki Gönderilecek.
-        return response()->json([
-            'status' => true,
-            "message" => [
-                "title" => "Başarılı",
-                "body" => "Kullanıcı Şifresi Başarıyla Değiştirildi. Sıfırlama Token: ".$resetpassword->token,
-                "type" => "success",
-            ]
-        ]);
+
+        if($user->save()){
+            $resetPassword->delete();
+            //Şifre değiştildiğine dair bağlantı için $resetpassword->token olarak kullanabilirsiniz.
+            //TODO:: Eposta adresine Şifre değiştiğine dair mail Gönderilecek.
+            return response()->json([
+                'status' => true,
+                "message" => [
+                    "title" => "Başarılı",
+                    "body" => "Kullanıcı Şifresi Başarıyla Değiştirildi.",
+                    "type" => "success",
+                ]
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Şifre güncelleme sırasında teknik bir hata meydana geldi!",
+                    "type" => "success",
+                ]
+            ]);
+
+        }
     }
     /**
      * ProfilePasswordReset For Profile in User
@@ -303,26 +312,15 @@ class AuthController
      * @return \Illuminate\Http\JsonResponse
      *
      */
-    public function profile_password_reset(Request $request) {
-        $rules = [
-            'old_password' => 'required|string|min:6',
-            'password' => 'required|string|min:6|confirmed',
-            'password_confirmation' => 'required|string|min:6',
-        ];
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return response()->json([
-                "status" => false ,
-                "message" => [
-                    "title" => "Hata",
-                    "body" => $validator->errors(),
-                    "type" => "error",
-                ]
-            ]);
-        }
+    public function passwordResetForProfile(Request $request) {
+        $data = $request->validate([
+            'old_password' => 'required|string|min:8',
+            'password' => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required|string|min:8',
+        ]);
 
-        $user = User::where('email', Auth::User()->email)->first();
-        $storedPassword = User::where('email',Auth::User()->email)->value('password');
+        $user = User::where('email', Auth::user()->email)->first();
+        $storedPassword = User::where('email',Auth::user()->email)->value('password');
         if (!$user) {
             return response()->json([
                 "status" => false ,
@@ -332,7 +330,7 @@ class AuthController
                     "type" => "error",
                 ]
             ]);
-        }elseif(!Hash::check($request->old_password, $storedPassword)){
+        }elseif(!Hash::check($data['old_password'], $storedPassword)){
             return response()->json([
                 "status" => false ,
                 "message" => [
@@ -342,18 +340,28 @@ class AuthController
                 ]
             ]);
         }
-        $user->password = bcrypt($request->password);
-        $user->save();
-        //Şifre değiştildiğine dair bağlantı için $resetpassword->token olarak kullanabilirsiniz.
-        //TODO:: Maile Sıfırlama Linki Gönderilecek.
-        return response()->json([
-            'status' => true,
-            "message" => [
-                "title" => "Başarılı",
-                "body" => "Kullanıcı Şifresi Başarıyla Değiştirildi.",
-                "type" => "success",
-            ]
-        ]);
+        $user->password = bcrypt($data['password']);
+
+        if($user->save()){
+            //TODO:: Eposta adresine Şifre değiştiğine dair mail Gönderilecek.
+            return response()->json([
+                'status' => true,
+                "message" => [
+                    "title" => "Başarılı",
+                    "body" => "Kullanıcı şifresi başarıyla değiştirildi.",
+                    "type" => "success",
+                ]
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Şifre güncelleme esnasında teknik bir hata meydana geldi!",
+                    "type" => "error",
+                ]
+            ]);
+        }
     }
 
 }
