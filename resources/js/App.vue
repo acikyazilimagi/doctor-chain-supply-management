@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import Header from "@/src/layout/Header.vue";
 // import Footer from "@/src/layout/Footer.vue";
 import Default from "@/src/layout/Default.vue";
@@ -25,11 +26,19 @@ export default {
             layout: null,
         };
     },
-    computed : {
-        user() {
-            return this.$store.getters['auth/user']
-        }
+
+    created(){
+        this.getRecipeItemCategories()
+        this.getSpecialtiesCategories()
     },
+
+    methods:{
+        ...mapActions('global', [
+            'getRecipeItemCategories',
+            'getSpecialtiesCategories'
+        ]),
+    },
+
     watch: {
         $route(to) {
             if (to.meta.layout !== undefined && to.meta.layout.length > 0) {

@@ -38,7 +38,7 @@
                             </div>
                         </div>
 
-                        <RecipeFormItem @recipeData="catchRecipeFormItemAction"/>
+                        <RecipeFormItem :recipeData="items" :recipeCategories="getCategories" @recipeData="catchRecipeFormItemAction"/>
 
                         <div class="row mb-3">
                             <div class="col-12">
@@ -107,6 +107,7 @@ import {
     minLength,
     maxLength,
 } from '@vuelidate/validators'
+import { mapGetters } from 'vuex'
 
 export default {
     name: "Account.Recipe.Create",
@@ -121,9 +122,16 @@ export default {
             form_is_loading: true,
             form_is_posting: false,
             form_is_posted: false,
-
             title: null,
-            items: [],
+            items: [
+                {
+                    order: 1,
+                    action_type: true,
+                    text: null,
+                    count: 1,
+                    category_id: null
+                }
+            ],
             address: {
                 city: null,
                 district: null,
@@ -139,15 +147,17 @@ export default {
                     title: "İstek Başlığı",
                     description: "Detaylı Not",
                     city: this.$t('modules.recipe.form.city.title'),
-                    district: this.$t('modules.recipe.form.city.district'),
-                    neighbourhood: this.$t('modules.recipe.form.city.neighbourhood'),
-                    address_detail: this.$t('modules.recipe.form.city.address_detail'),
+                    district: this.$t('modules.recipe.form.district.title'),
+                    neighbourhood: this.$t('modules.recipe.form.neighbourhood.title'),
+                    address_detail: this.$t('modules.recipe.form.address_detail.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
             },
         }
     },
     computed: {
+        ...mapGetters('global', ['getCategories']),
+        
         backendAndFrontendCombinedErrorsStatus() {
             return (
                 this.form_is_posted &&
@@ -173,21 +183,6 @@ export default {
                 $autoDirty: true,
                 $lazy: true,
             },
-            // city: {
-            //     required,
-            //     $autoDirty: true,
-            //     $lazy: true,
-            // },
-            // district: {
-            //     required,
-            //     $autoDirty: true,
-            //     $lazy: true,
-            // },
-            // neighbourhood: {
-            //     required,
-            //     $autoDirty: true,
-            //     $lazy: true,
-            // },
             address_detail: {
                 required,
                 maxLength: maxLength(100),

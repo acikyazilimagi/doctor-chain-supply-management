@@ -57,10 +57,11 @@ export default {
         }
     },
     methods: {
-        ...mapActions({
-            signIn:'auth/login'
-        }),
+        ...mapActions('global', [
+        'loginUser'
+        ]),
         async login(){
+            console.log("5")
             const data = {
                 email: this.email,
                 password: this.password,
@@ -68,7 +69,7 @@ export default {
             }
             await axios.get('/sanctum/csrf-cookie').then(async () => {
                 await axios.post('/api/auth/login', data).then(()=>{
-                    this.signIn()
+                    this.loginUser()
                 }).catch(({response})=>{
                     if(response.status===422){
                         this.validationErrors = response.data.errors

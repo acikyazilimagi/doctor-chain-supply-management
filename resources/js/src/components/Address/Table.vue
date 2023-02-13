@@ -6,11 +6,11 @@
             <td>{{ city?.name }}</td>
         </tr>
         <tr>
-            <td>{{ $t('modules.recipe.form.city.district') }}</td>
+            <td>{{ $t('modules.recipe.form.district.title') }}</td>
             <td>{{ district }}</td>
         </tr>
         <tr>
-            <td>{{ $t('modules.recipe.form.city.neighbourhood') }}</td>
+            <td>{{ $t('modules.recipe.form.neighbourhood.title') }}</td>
             <td>{{ neighbourhood?.name }}</td>
         </tr>
         </tbody>

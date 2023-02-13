@@ -41,6 +41,7 @@ const tr = {
         register: 'Kayıt Ol',
         login: 'Giriş Yap',
         reset: 'Temizle',
+        logout: 'Çıkış Yap',
         are_you_sure: 'Emin Misiniz?',
     },
     header: {
@@ -110,7 +111,7 @@ const tr = {
                 city: {
                     title: 'İl',
                     selectTitle: 'İl Seçiniz',
-                    placeholder: 'Lütfen il seçiniz.'
+                    placeholder: 'Lütfen il seçiniz.',
                 },
                 district: {
                     title: 'İlçe',
@@ -127,7 +128,7 @@ const tr = {
                     placeholder: 'Adresi kolayca bulabilmek için detaylı açıklama yazabilirsiniz.'
                 },
                 specialty: {
-                    title: '@:general.modules.auth.register.form.specialty.title'
+                    title: 'Uzmanlık'
                 },
             },
         },
@@ -140,9 +141,9 @@ const tr = {
                 you_will_not_update: 'İsteklerinizi güncelleyemeyeceksiniz !'
             },
             referral: {
-                name: '@:general.modules.auth.register.form.name.title',
-                email: '@:general.modules.auth.register.form.email.title',
-                specialty: '@:general.modules.auth.register.form.specialty.title',
+                name: 'İsim',
+                email: 'E-Posta',
+                specialty: 'Uzmanlık',
                 referenced_persons: 'Referans Olunan Kişiler',
                 confirm_my_friend: 'Arkadaşımı Onayla'
             }
