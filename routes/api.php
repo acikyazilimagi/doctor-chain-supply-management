@@ -15,6 +15,18 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->middleware('guest');
     Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register'])->middleware('guest');
     Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+
+    //TODO::mail taslağı ve düzenlemeleri yapılmalı
+    Route::prefix('password')->group(function(){
+        //Token Oluştur, Kaydet ve Mail'e gönder
+        Route::post('/sendtoken', [\App\Http\Controllers\AuthController::class, 'password_store_token']);
+        //Token doğru mu? İlgili kullanıcıya mı ait?
+        //İlave Notlar Token kısmına girilen token kodu, sıfırlama ekranına ait şifre güncelleme sütunları  bu kısım sorunsuz çalışıyor ise aktif oluyor. Validate olarak değerlendirilebilir.
+        Route::get('/find/{token?}', [\App\Http\Controllers\AuthController::class, 'password_find_token']);
+        //Token ile birlikte şifreyi sıfırla
+        Route::post('/resetpassword',[\App\Http\Controllers\AuthController::class, 'password_reset']);
+        Route::post('/profile_password',[\App\Http\Controllers\AuthController::class, 'profile_password_reset'])->middleware('auth:sanctum');
+    });
 });
 
 Route::group(['prefix' => 'recipes', 'as' => 'recipe.'], function (){

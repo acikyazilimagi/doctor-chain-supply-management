@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\ResetPassword;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController
 {
@@ -125,4 +128,232 @@ class AuthController
     {
         return Auth::guard($guard);
     }
+
+    /**
+     * PasswordStoreToken Token Store
+     *
+     * @param[string] email
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function password_store_token(Request $request) {
+        $rules = [
+            'email' => 'required|string|email|exists:users'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => $validator->errors(),
+                    "type" => "error",
+                ]
+            ]);
+        }
+
+        $user = User::where('email', $request['email'])->first();
+        if (!$user) {
+
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Mail Adresi Bulunamadı!",
+                    "type" => "error",
+                ]
+            ]);
+        }
+        $resetpassword = ResetPassword::updateOrCreate(
+            [
+                'email' => $user->email,
+            ],
+            [
+                'email' => $user->email,
+                'token' => Str::random(45),
+            ]
+        );
+        if ($user && $resetpassword) {
+            //Sıfırlama bağlantısı için $resetpassword->token olarak kullanabilirsiniz.
+            //TODO:: Maile Sıfırlama Linki Gönderilecek.
+        }
+        return response()->json([
+            'status' => true,
+            "message" => [
+                "title" => "Başarılı",
+                "body" => "Sıfırlama bağlantısı mailinize başarıyla gönderildi. Sıfırlama Bağlantısı: ".$resetpassword->token,
+                "type" => "success",
+            ]
+        ]);
+    }
+    /**
+     * Find Token
+     *
+     * @param[string] token
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function password_find_token($token) {
+        $resetpassword = ResetPassword::where('token', $token)->first();
+        if (!$token) {
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Bağlantı Geçersiz",
+                    "type" => "error",
+                ]
+            ]);
+        }
+        if (Carbon::parse($resetpassword->created_at)->addMinutes(720)->isPast()) {
+            $resetpassword->delete();
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Bağlantı Geçersiz",
+                    "type" => "error",
+                ]
+            ]);
+        }
+        return response()->json([
+            "status" => true ,
+            "message" => [
+                "title" => "Başarılı",
+                "body" => $resetpassword,
+                "type" => "success",
+            ]
+        ]);
+    }
+    /**
+     * ResetPassword Token Store
+     *
+     * @param[string] email
+     * @param[string] password
+     * @param[string] password_confirmation
+     * @param[string] token
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function password_reset(Request $request) {
+        $rules = [
+            'email' => 'required|string|email|exists:users',
+            'token' => 'required|string',
+            'password' => 'required|string|min:6|confirmed',
+            'password_confirmation' => 'required|string|min:6',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => $validator->errors(),
+                    "type" => "error",
+                ]
+            ]);
+        }
+        $resetpassword = ResetPassword::updateOrCreate(
+            [
+                'email' => $request->email,
+                'token' => $request->token,
+            ]
+        )->first();
+        if (!$resetpassword) {
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Mail Adresi Bulunamadı",
+                    "type" => "error",
+                ]
+            ]);
+        }
+        $user = User::where('email', $resetpassword->email)->first();
+        if (!$user) {
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Kullanıcı Bulunamadı",
+                    "type" => "error",
+                ]
+            ]);
+        }
+        $user->password = bcrypt($request->password);
+        $user->save();
+        $resetpassword->delete();
+        //Şifre değiştildiğine dair bağlantı için $resetpassword->token olarak kullanabilirsiniz.
+        //TODO:: Maile Sıfırlama Linki Gönderilecek.
+        return response()->json([
+            'status' => true,
+            "message" => [
+                "title" => "Başarılı",
+                "body" => "Kullanıcı Şifresi Başarıyla Değiştirildi. Sıfırlama Token: ".$resetpassword->token,
+                "type" => "success",
+            ]
+        ]);
+    }
+    /**
+     * ProfilePasswordReset For Profile in User
+     *
+     * @param[string] old_password
+     * @param[string] password
+     * @param[string] password_confirmation
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function profile_password_reset(Request $request) {
+        $rules = [
+            'old_password' => 'required|string|min:6',
+            'password' => 'required|string|min:6|confirmed',
+            'password_confirmation' => 'required|string|min:6',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => $validator->errors(),
+                    "type" => "error",
+                ]
+            ]);
+        }
+
+        $user = User::where('email', Auth::User()->email)->first();
+        $storedPassword = User::where('email',Auth::User()->email)->value('password');
+        if (!$user) {
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Kullanıcı bulunamadı!",
+                    "type" => "error",
+                ]
+            ]);
+        }elseif(!Hash::check($request->old_password, $storedPassword)){
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Eski Şifre Hatalı Bunun Yerine Şifremi Unuttum Bağlantısını Kullanarak E-Posta üzerinden sıfırlayabilirsiniz!",
+                    "type" => "error",
+                ]
+            ]);
+        }
+        $user->password = bcrypt($request->password);
+        $user->save();
+        //Şifre değiştildiğine dair bağlantı için $resetpassword->token olarak kullanabilirsiniz.
+        //TODO:: Maile Sıfırlama Linki Gönderilecek.
+        return response()->json([
+            'status' => true,
+            "message" => [
+                "title" => "Başarılı",
+                "body" => "Kullanıcı Şifresi Başarıyla Değiştirildi.",
+                "type" => "success",
+            ]
+        ]);
+    }
+
 }
