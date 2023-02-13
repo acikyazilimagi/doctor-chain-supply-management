@@ -12,7 +12,7 @@ const routes = [
         }
     },
     {
-        path: '/tum-listeler',
+        path: '/all-recipes',
         component: () => import(/* webpackChunkName: "RecipeAll" */ '@/src/pages/Recipe/All.vue'),
         name: 'Recipes.All',
         meta: {
@@ -20,7 +20,7 @@ const routes = [
         }
     },
     {
-        path: '/yeni-istek-olustur',
+        path: '/create-new-recipe',
         component: () => import(/* webpackChunkName: "AccountRecipeCreate" */ '@/src/pages/Account/Recipe/Create.vue'),
         name: 'Recipes.Create',
         meta: {
@@ -29,7 +29,7 @@ const routes = [
         },
     },
     {
-        path: '/istek-listem',
+        path: '/my-wish-list',
         component: () => import(/* webpackChunkName: "AccountRecipeIndex" */ '@/src/pages/Account/Recipe/Index.vue'),
         name: 'Recipes.Index',
         meta: {
@@ -63,7 +63,7 @@ const routes = [
                 }
             },
             {
-                path: '/hesabim',
+                path: '/account',
                 component: () => import(/* webpackChunkName: "AccountProfile" */ '@/src/pages/Account/Profile.vue'),
                 name: 'Account.Profile.Index',
                 meta: {
@@ -71,7 +71,7 @@ const routes = [
                 }
             },
             {
-                path: '/hesabimi-guncelle',
+                path: '/account-update',
                 component: () => import(/* webpackChunkName: "AccountEdit" */ '@/src/pages/Account/Edit.vue'),
                 name: 'Account.Profile.Edit',
                 meta: {
@@ -92,7 +92,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (store.getters['auth/user']) {
+    if (store.getters['global/getUser']) {
         if (to.matched.some(route => route.meta.middleware === 'guest')){
             next({ name: 'Index' })
         }else{

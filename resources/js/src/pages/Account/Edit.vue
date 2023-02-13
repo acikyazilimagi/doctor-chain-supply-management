@@ -51,7 +51,7 @@
                                 @focus="vuelidate$.specialty.$touch()"
                             >
                                 <option :value="null">{{ $t('general.select') }}</option>
-                                <option v-for="s in specialties" :value="s.id" :key="'specialty_' + s.id">{{ s.name }}</option>
+                                <option v-for="specialtiesItem in getSpecialtiesCategories" :value="specialtiesItem.id" :key="'specialty_' + specialtiesItem.id">{{ specialtiesItem.name }}</option>
                             </select>
                             <SingleInputError :vuelidate-object="vuelidate$.specialty" />
                         </div>
@@ -79,7 +79,7 @@ import {
     minLength,
     required,
 } from '@vuelidate/validators'
-import {mapActions} from "vuex";
+import {mapActions,mapGetters} from "vuex";
 
 export default {
     name: "Account.Edit",
@@ -111,9 +111,8 @@ export default {
         }
     },
     created() {
-        this.prepareSpecialties()
-        this.name = this.user.name
-        this.specialty = this.user.specialty.id
+        this.name = this.getUser.name
+        this.specialty = this.getUser.specialty.id
     },
     computed: {
         backendAndFrontendCombinedErrorsStatus() {
@@ -123,9 +122,10 @@ export default {
                     .show_backend_and_frontend_combined_error_messages
             )
         },
-        user() {
-            return this.$store.getters['auth/user']
-        },
+        ...mapGetters('global',[
+            'getUser',
+            'getSpecialtiesCategories'
+        ]),
     },
     setup() {
         return { vuelidate$: useVuelidate() }
@@ -147,21 +147,10 @@ export default {
         }
     },
     methods: {
-        ...mapActions({
-            resetUser:'auth/resetUser'
-        }),
+        ...mapActions('global', ['setUser']),
+
         selectFile(event) {
             this.file = event.target.files[0];
-        },
-        async prepareSpecialties(){
-            const $this = this
-            await this.axios.get('/api/specialties')
-                .then((response) => {
-                    $this.specialties = response.data.data
-                })
-                .catch((e) => {
-                    $this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
-                })
         },
         async update(e) {
             const $this = this
@@ -189,7 +178,7 @@ export default {
                     await $this.axios.post('/api/account/update', data)
                         .then((response) => {
                             if (response.status) {
-                                this.resetUser()
+                                this.setUser()
                                 this.$swal.fire(this.$t('general.success'), response.data.message, 'success')
                             } else {
                                 this.$swal.fire(this.$t('general.error'), response.data.message, 'danger')
