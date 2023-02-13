@@ -3,15 +3,15 @@
         <tbody>
             <tr>
                 <td>{{ $t('modules.account.referral.name') }}</td>
-                <td>{{ user.name }}</td>
+                <td>{{ getUser.name }}</td>
             </tr>
             <tr>
                 <td>{{ $t('modules.account.referral.email') }}</td>
-                <td>{{ user.email }}</td>
+                <td>{{ getUser.email }}</td>
             </tr>
             <tr>
                 <td>{{ $t('modules.account.referral.specialty') }}</td>
-                <td>{{ user.specialty?.name }}</td>
+                <td>{{ getUser.specialty?.name }}</td>
             </tr>
         </tbody>
     </table>
@@ -43,13 +43,13 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 export default {
     name: "Account.Profile",
     computed : {
-        user() {
-            return this.$store.getters['auth/user']
-        }
+        ...mapGetters('global', [
+            'getUser'
+        ])
     },
     created() {
         this.prepareReferralLinks()

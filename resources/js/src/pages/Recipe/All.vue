@@ -15,7 +15,7 @@
                 <div style="padding: 15px">
                     <div class="row">
                         <p>{{ item.description }}</p>
-                        <p>{{ $t('modules.recipe.address_detail.title') }} : {{ item.address.address_detail }}</p>
+                        <p>{{ $t('modules.recipe.form.address_detail.title') }} : {{ item.address.address_detail }}</p>
                     </div>
                     <div class="row">
                         <div class="col-8">

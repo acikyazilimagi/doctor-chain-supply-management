@@ -92,7 +92,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (store.getters['auth/user']) {
+    if (store.getters['global/getUser']) {
         if (to.matched.some(route => route.meta.middleware === 'guest')){
             next({ name: 'Index' })
         }else{

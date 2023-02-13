@@ -10,7 +10,7 @@
                     <li class="nav-item">
                         <router-link class="nav-link" :to="{ name: 'Recipes.All' }">{{ $t('header.all_recipes') }}</router-link>
                     </li>
-                    <template v-if="user">
+                    <template v-if="getUser">
                         <li class="nav-item">
                             <router-link class="nav-link" :to="{ name: 'Recipes.Create' }">{{ $t('header.create_recipe') }}</router-link>
                         </li>
@@ -21,7 +21,7 @@
                             <router-link class="nav-link" :to="{ name: 'Account.Profile.Index' }">{{ $t('header.my_account') }}</router-link>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link" @click="logout">{{ $t('general.logout') }}</a>
+                            <a href="#" class="nav-link" @click="logoutUser">{{ $t('general.logout') }}</a>
                         </li>
                     </template>
                     <template v-else>
@@ -39,24 +39,19 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions,mapGetters} from "vuex";
 export default {
     name: "Header",
     computed : {
-        user() {
-            return this.$store.getters['auth/user']
-        }
+        ...mapGetters('global',[
+            'getUser',
+            'getAuthenticaded'
+        ])
     },
     methods:{
-        ...mapActions({
-            signOut:"auth/logout"
-        }),
-        async logout(){
-            await axios.post('/api/auth/logout').then(({data})=>{
-                this.signOut()
-                this.$router.push({name:"Auth.Login"})
-            })
-        }
+        ...mapActions('global', [
+            'logoutUser'
+        ]),
     }
 }
 </script>
