@@ -12,7 +12,7 @@ const routes = [
         }
     },
     {
-        path: '/all-recipes',
+        path: '/tum-listeler',
         component: () => import(/* webpackChunkName: "RecipeAll" */ '@/src/pages/Recipe/All.vue'),
         name: 'Recipes.All',
         meta: {
@@ -20,7 +20,7 @@ const routes = [
         }
     },
     {
-        path: '/create-new-recipe',
+        path: '/yeni-istek-olustur',
         component: () => import(/* webpackChunkName: "AccountRecipeCreate" */ '@/src/pages/Account/Recipe/Create.vue'),
         name: 'Recipes.Create',
         meta: {
@@ -29,7 +29,7 @@ const routes = [
         },
     },
     {
-        path: '/my-wish-list',
+        path: '/istek-listem',
         component: () => import(/* webpackChunkName: "AccountRecipeIndex" */ '@/src/pages/Account/Recipe/Index.vue'),
         name: 'Recipes.Index',
         meta: {
@@ -63,7 +63,7 @@ const routes = [
                 }
             },
             {
-                path: '/account',
+                path: '/hesabim',
                 component: () => import(/* webpackChunkName: "AccountProfile" */ '@/src/pages/Account/Profile.vue'),
                 name: 'Account.Profile.Index',
                 meta: {
@@ -71,7 +71,7 @@ const routes = [
                 }
             },
             {
-                path: '/account-update',
+                path: '/hesabimi-guncelle',
                 component: () => import(/* webpackChunkName: "AccountEdit" */ '@/src/pages/Account/Edit.vue'),
                 name: 'Account.Profile.Edit',
                 meta: {
