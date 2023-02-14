@@ -250,6 +250,7 @@ export default {
                                 .then(() => {
                                     if (response.data.status) {
                                         this.reset()
+                                        this.$router.push({name: 'Recipes.Index'})
                                     }
                                 })
                         })
