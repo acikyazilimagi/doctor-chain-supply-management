@@ -4,7 +4,7 @@ import router from '@/router.js'
 export default {
     namespaced: true,
     state:{
-        authenticated: null,
+        authenticated: false,
         user: null,
     },
     getters:{
