@@ -11,17 +11,16 @@ function support(recipe){
                 .then((response) => {
                     if (response.data.status) {
                         emitter.emit('support-saved')
-                        this.$swal.fire('Başarılı', response.data.message, 'success')
-                    } else {
-                        this.$swal.fire('Hata', response.data.message, 'danger')
                     }
+                    this.$swal.fire(response.data.message.title, response.data.message.body, response.data.message.type)
                 })
                 .catch((e) => {
-                    if (e.statusCode === 422) {
-                        state.validationProp.errors = e.data.errors
-                        state.validationProp.message = e.data.message
+                    if (e.response.status === 422) {
+                        // TODO : İlgili yerlerde çalışabilecek şekilde değişiklik yapılmalı
+                        // this.validation.errors = e.response.data.errors
+                        // this.validation.message = e.response.data.message
                     } else {
-                        this.$swal.fire('Hata', e.response.data.message, 'error')
+                        this.$swal.fire(e.response.data.message.title, e.response.data.message.body, e.response.data.message.type)
                     }
                 })
         }

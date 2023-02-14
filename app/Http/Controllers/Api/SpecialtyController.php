@@ -8,8 +8,11 @@ use App\Models\Specialty;
 class SpecialtyController extends Controller
 {
     public function index(){
-        $specialty = Specialty::all();
+        $specialties = Specialty::all();
 
-        return response()->json(['data' => $specialty]);
+        return response()->json([
+            "status" => true,
+            "data" => $specialties,
+        ]);
     }
 }

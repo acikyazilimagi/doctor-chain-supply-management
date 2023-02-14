@@ -1,8 +1,8 @@
 <template>
     <div v-if="validationErrors || message" class="alert alert-danger">
-        <div class="text-center">{{ message }}</div>
+        <div v-if="showHeaderMessage" class="text-center">{{ message }}</div>
         <template v-if="validationErrors">
-            <hr class="mt-2" />
+            <hr v-if="showHeaderMessage" class="mt-2" />
             <ul class="list-unstyled mb-0">
                 <template v-for="(value, key) in validationErrors" :key="'error_main_' + key">
                     <template v-if="typeof value === 'object'">
@@ -38,6 +38,10 @@
                 type: Object,
                 required: true,
             },
+            showHeaderMessage: {
+                type: Boolean,
+                default: true
+            }
         },
         data() {
             return {}

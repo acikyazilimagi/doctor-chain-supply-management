@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\ResetPassword\ResetWithProfileRequest;
 use App\Http\Requests\Auth\ResetPassword\ResetWithTokenRequest;
 use App\Http\Requests\Auth\ResetPassword\TokenGenerateRequest;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\ReferralLink;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -14,21 +16,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\ResetPassword;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'min:2', 'max:30'],
-            'email' => ['required', 'string', 'email', 'max:60', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'max:25', 'confirmed'],
-            'legal_text' => ['required'],
-            'kvkk_text' => ['required'],
-            'specialty' => ['required', 'min:1'],
-            'referral_code' => ['required', 'min:16', 'max:16'],
-        ]);
+        $data = $request->validated();
 
         $referral_code = ReferralLink::where(['code' => $request->get('referral_code')])->first();
 
@@ -94,36 +87,63 @@ class AuthController
         return response()->json(["status" => false , "message" => "Kayıt başarısız oldu."]);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        $credentials = $request->validated();
 
-        $credentials['verified'] = true;
+        if ($this->guard()->attempt($credentials)) {
+            $user = User::select(['id', 'verified'])->where('email', $request->input('email'))->first();
 
-        if (!$this->guard()->attempt($credentials)) {
+            if ($user->verified){
+                $this->guard()->attempt($credentials);
+                $token = $this->guard()->user()->createToken('auth-token')->plainTextToken;
+
+                return response()->json([
+                    "status" => true ,
+                    "data" => [
+                        'access_token' => $token,
+                        'token_type' => 'Bearer',
+                    ],
+                    "message" => [
+                        "title" => "Başarılı",
+                        "body" => "Başarıyla giriş yaptınız.",
+                        "type" => "success",
+                    ]
+                ]);
+            }else{
+                return response()->json([
+                    "status" => false ,
+                    "message" => [
+                        "title" => "Hata !",
+                        "body" => "Hesabınız onaylanmadığı için henüz giriş yapamazsınız.",
+                        "type" => "error",
+                    ]
+                ]);
+            }
+        }else{
+            $this->guard()->logout();
             return response()->json([
-                'message' => 'The provided credentials are incorrect.'
-            ], 422);
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata !",
+                    "body" => "Yanlış bilgi girdiniz.",
+                    "type" => "error",
+                ]
+            ]);
         }
-
-        $this->guard()->attempt($credentials);
-        $token = $this->guard()->user()->createToken('auth-token')->plainTextToken;
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ], 200);
     }
 
     public function logout(Request $request)
     {
         $this->guard()->logout();
+
         return response()->json([
-            'status_code' => '200',
-            'message' => 'logged out successfully'
+            "status" => true ,
+            "message" => [
+                "title" => "Başarılı !",
+                "body" => "Başarıyla çıkış yaptınız.",
+                "type" => "success",
+            ]
         ]);
     }
 
@@ -193,6 +213,7 @@ class AuthController
             ]);
         }
     }
+
     public function passwordTokenCheck($token) {
         $resetpassword = ResetPassword::where('token', $token)->first();
         if (!$resetpassword) {
@@ -225,6 +246,7 @@ class AuthController
             ]
         ]);
     }
+
     public function passwordResetWithToken(ResetWithTokenRequest $request) {
         $resetPassword = ResetPassword::updateOrCreate(
             [
@@ -279,6 +301,7 @@ class AuthController
 
         }
     }
+
     public function passwordResetForProfile(ResetWithProfileRequest $request) {
         $user = User::where('email', Auth::user()->email)->first();
         $storedPassword = User::where('email',Auth::user()->email)->value('password');
@@ -324,5 +347,4 @@ class AuthController
             ]);
         }
     }
-
 }

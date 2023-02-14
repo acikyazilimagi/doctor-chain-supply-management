@@ -7,7 +7,7 @@
                 <div class="card-body">
                    <div class="row">
                        <div class="col-12">
-                           <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :vuelidate="vuelidate$" />
+                           <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :show-header-message="validation.showHeaderMessage" :vuelidate="vuelidate$" />
                        </div>
 
                    </div>
@@ -223,8 +223,6 @@ export default {
     },
     data(){
         return {
-            form_is_loading: true,
-            form_is_posting: false,
             form_is_posted: false,
 
             name: null,
@@ -252,6 +250,7 @@ export default {
                     referral_code: this.$t('modules.auth.register.form.referral_code.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
+                showHeaderMessage: false,
             },
         }
     },
@@ -386,22 +385,20 @@ export default {
                 if (result.isConfirmed) {
                     await $this.axios.post('/api/auth/register', data)
                         .then((response) => {
-                            if (response.data.status) {
-                                this.$swal
-                                    .fire(response.data.message.title, response.data.message.body, response.data.message.type)
-                                    .then(() => {
+                            this.$swal
+                                .fire(response.data.message.title, response.data.message.body, response.data.message.type)
+                                .then(() => {
+                                    if (response.data.status) {
                                         this.$router.push({name:"Auth.Login"})
-                                    })
-                            } else {
-                                this.$swal.fire(response.data.message.title, response.data.message.body, response.data.message.type)
-                            }
+                                    }
+                                })
                         })
                         .catch((e) => {
-                            if (e.statusCode === 422) {
-                                state.validationProp.errors = e.data.errors
-                                state.validationProp.message = e.data.message
+                            if (e.response.status === 422) {
+                                this.validation.errors = e.response.data.errors
+                                this.validation.message = e.response.data.message
                             } else {
-                                this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
+                                this.$swal.fire(e.response.data.message.title, e.response.data.message.body, e.response.data.message.type)
                             }
                         })
                 }
