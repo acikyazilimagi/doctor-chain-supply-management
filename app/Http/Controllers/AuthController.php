@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\ResetPassword;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController
 {
@@ -137,9 +136,14 @@ class AuthController
     public function logout(Request $request)
     {
         $this->guard()->logout();
+
         return response()->json([
-            'status_code' => '200',
-            'message' => 'logged out successfully'
+            "status" => true ,
+            "message" => [
+                "title" => "Başarılı !",
+                "body" => "Başarıyla çıkış yaptınız.",
+                "type" => "success",
+            ]
         ]);
     }
 
@@ -209,6 +213,7 @@ class AuthController
             ]);
         }
     }
+
     public function passwordTokenCheck($token) {
         $resetpassword = ResetPassword::where('token', $token)->first();
         if (!$resetpassword) {
@@ -241,6 +246,7 @@ class AuthController
             ]
         ]);
     }
+
     public function passwordResetWithToken(ResetWithTokenRequest $request) {
         $resetPassword = ResetPassword::updateOrCreate(
             [
@@ -295,6 +301,7 @@ class AuthController
 
         }
     }
+
     public function passwordResetForProfile(ResetWithProfileRequest $request) {
         $user = User::where('email', Auth::user()->email)->first();
         $storedPassword = User::where('email',Auth::user()->email)->value('password');
@@ -340,5 +347,4 @@ class AuthController
             ]);
         }
     }
-
 }
