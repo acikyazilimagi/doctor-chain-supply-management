@@ -48,7 +48,7 @@ export default {
             if (to.meta.layout !== undefined && to.meta.layout.length > 0) {
                 this.layout = to.meta.layout;
             } else {
-                this.layout = "FullWidth";
+                this.layout = "Default";
             }
         },
     },

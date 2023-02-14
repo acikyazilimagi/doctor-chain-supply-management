@@ -1,6 +1,6 @@
 <template>
     <template v-if="show">
-        <BackendErrors :errors="errors" :message="message" class="mb-2"></BackendErrors>
+        <BackendErrors :errors="errors" :message="message" :show-header-message="showHeaderMessage" class="mb-2"></BackendErrors>
         <FrontendErrors :attributes="validationAttributes" :vuelidate="vuelidate"></FrontendErrors>
     </template>
 </template>
@@ -21,7 +21,7 @@
                 default: true,
             },
             errors: {
-                type: Array,
+                type: Object,
                 default: () => [],
             },
             message: {
@@ -37,6 +37,10 @@
                 default: () => {
                     return {}
                 },
+            },
+            showHeaderMessage: {
+                type: Boolean,
+                default: true,
             },
         },
     }

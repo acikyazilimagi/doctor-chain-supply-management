@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Recipe\ChangeStatusRequest;
+use App\Http\Requests\Recipe\StoreRequest;
 use App\Models\Recipe;
 use App\Models\RecipeItem;
-use Illuminate\Http\Request;
 
 class RecipeController extends Controller
 {
     public function my(){
-
         $recipes = Recipe::
             where(['created_by' => auth()->user()->id])
             ->with([
@@ -20,7 +20,10 @@ class RecipeController extends Controller
             ->orderByDesc('id')
             ->get();
 
-        return response()->json(['data' => $recipes]);
+        return response()->json([
+            "status" => true,
+            "data" => $recipes,
+        ]);
     }
 
     public function latests(){
@@ -33,7 +36,11 @@ class RecipeController extends Controller
             ->latest()
             ->take(100)
             ->get();
-        return response()->json(['data' => $recipes]);
+
+        return response()->json([
+            "status" => true,
+            "data" => $recipes,
+        ]);
     }
 
     public function all(){
@@ -44,10 +51,14 @@ class RecipeController extends Controller
             ])
             ->orderByDesc('id')
             ->paginate(100000);
-        return response()->json(['data' => $recipes]);
+
+        return response()->json([
+            "status" => true,
+            "data" => $recipes,
+        ]);
     }
 
-    public function store(Request $request){
+    public function store(StoreRequest $request){
         $recipe = null;
         try {
             $recipe = Recipe::create([
@@ -68,8 +79,12 @@ class RecipeController extends Controller
             }
 
             return response()->json([
-                'status' => true,
-                'message' => 'Kayıt başarıyla eklendi.'
+                "status" => true ,
+                "message" => [
+                    "title" => "Başarılı",
+                    "body" => "Kayıt başarıyla eklendi",
+                    "type" => "success",
+                ]
             ]);
         }catch (\Exception $exception){
             if ($recipe){
@@ -77,13 +92,17 @@ class RecipeController extends Controller
             }
 
             return response()->json([
-                'status' => false,
-                'message' => 'Teknik bir sorun oluştu, işlem başarısız oldu.'
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata !",
+                    "body" => "İşlem başarısız oldu",
+                    "type" => "error",
+                ]
             ], 500);
         }
     }
 
-    public function change_status(Request $request){
+    public function change_status(ChangeStatusRequest $request){
         try {
             $recipe = Recipe::find($request->get('id'));
             $recipe->fill([
@@ -92,13 +111,21 @@ class RecipeController extends Controller
             $recipe->save();
 
             return response()->json([
-                'status' => true,
-                'message' => 'Kayıt başarıyla eklendi.'
+                "status" => true ,
+                "message" => [
+                    "title" => "Başarılı",
+                    "body" => "Kayıt başarıyla eklendi.",
+                    "type" => "success",
+                ]
             ]);
         }catch (\Exception $exception){
             return response()->json([
-                'status' => false,
-                'message' => 'Teknik bir sorun oluştu, işlem başarısız oldu.'
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata !",
+                    "body" => "İşlem başarısız oldu",
+                    "type" => "error",
+                ]
             ], 500);
         }
     }
@@ -106,6 +133,9 @@ class RecipeController extends Controller
     public function recipe_item_categories(){
         $categories = RecipeItem::categories();
 
-        return response()->json(['data' => $categories]);
+        return response()->json([
+            "status" => true,
+            "data" => $categories,
+        ]);
     }
 }

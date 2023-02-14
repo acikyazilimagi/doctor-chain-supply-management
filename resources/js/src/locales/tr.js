@@ -92,7 +92,22 @@ const tr = {
                         title: 'Beni hatırla'
                     },
                 }
-            }
+            },
+            login: {
+                form: {
+                    email: {
+                        title: 'E-Posta',
+                        placeholder: 'Lütfen e-posta adresinizi giriniz.'
+                    },
+                    password: {
+                        title: 'Parola',
+                        placeholder: 'Lütfen parolanızı giriniz.'
+                    },
+                    remember: {
+                        title: 'Beni hatırla'
+                    },
+                }
+            },
         },
         recipe: {
             title: {
