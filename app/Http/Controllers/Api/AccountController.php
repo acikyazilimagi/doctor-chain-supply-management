@@ -30,7 +30,14 @@ class AccountController extends Controller
 
     public function update(UpdateRequest $request){
         try {
-            $user = auth()->user();
+            $user = User::find(auth()->user()->id);
+
+            $user->createHistory([
+                'name' => $user->name,
+                'email' => $user->email,
+                'specialty' => $user->specialty,
+            ]);
+
             $user->name = $request->get('name');
             $user->specialty = $request->get('specialty');
             $user->save();
