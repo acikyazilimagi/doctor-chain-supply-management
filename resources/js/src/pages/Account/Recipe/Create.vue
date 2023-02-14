@@ -2,13 +2,7 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12">
-                <BackendAndFrontendCombined
-                    :errors="validation.errors"
-                    :message="validation.message"
-                    :show="backendAndFrontendCombinedErrorsStatus"
-                    :vuelidate="vuelidate$"
-                    :validation-attributes="validation.validation_attributes"
-                />
+                <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :show-header-message="validation.showHeaderMessage" :vuelidate="vuelidate$" />
             </div>
         </div>
         <div class="row">
@@ -38,7 +32,7 @@
                             </div>
                         </div>
 
-                        <RecipeFormItem :recipeData="items" :recipeCategories="getCategories" @recipeData="catchRecipeFormItemAction"/>
+                        <RecipeFormItem ref="items" :recipeData="items" :recipeCategories="getCategories" @recipeData="catchRecipeFormItemAction"/>
 
                         <div class="row mb-3">
                             <div class="col-12">
@@ -61,7 +55,7 @@
                             </div>
                         </div>
 
-                        <AddressForm :city="address.city" :district="address.district" :neighbourhood="address.neighbourhood" @city="onCityChanged" @district="onDistrictChanged" @neighbourhood="onNeighbourhoodChanged" />
+                        <AddressForm ref="address_form" :city="address.city" :district="address.district" :neighbourhood="address.neighbourhood" @city="onCityChanged" @district="onDistrictChanged" @neighbourhood="onNeighbourhoodChanged" />
 
                         <div class="row mb-3">
                             <div class="col-12">
@@ -152,12 +146,13 @@ export default {
                     address_detail: this.$t('modules.recipe.form.address_detail.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
+                showHeaderMessage: false,
             },
         }
     },
     computed: {
         ...mapGetters('global', ['getCategories']),
-        
+
         backendAndFrontendCombinedErrorsStatus() {
             return (
                 this.form_is_posted &&
@@ -173,13 +168,13 @@ export default {
         return {
             title: {
                 required,
-                minLength: minLength(5),
-                maxLength: maxLength(100),
+                minLength: minLength(2),
+                maxLength: maxLength(200),
                 $autoDirty: true,
                 $lazy: true,
             },
             description: {
-                maxLength: maxLength(500),
+                maxLength: maxLength(2500),
                 $autoDirty: true,
                 $lazy: true,
             },
@@ -222,6 +217,9 @@ export default {
             const $this = this
             e.preventDefault()
 
+            this.$refs.address_form.vuelidate$.$touch()
+            this.$refs.items.vuelidate$.$touch()
+
             this.form_is_posted = true
             $this.vuelidate$.$touch()
             if ($this.vuelidate$.$pending || $this.vuelidate$.$error) return
@@ -247,19 +245,20 @@ export default {
 
                     await $this.axios.post('/api/account/recipes', data)
                         .then((response) => {
-                            if (response.status) {
-                                this.reset()
-                                this.$swal.fire(this.$t('general.success'), response.data.message, 'success')
-                            } else {
-                                this.$swal.fire(this.$t('general.error'), response.data.message, 'danger')
-                            }
+                            this.$swal
+                                .fire(response.data.message.title, response.data.message.body, response.data.message.type)
+                                .then(() => {
+                                    if (response.data.status) {
+                                        this.reset()
+                                    }
+                                })
                         })
                         .catch((e) => {
-                            if (e.statusCode === 422) {
-                                state.validationProp.errors = e.data.errors
-                                state.validationProp.message = e.data.message
+                            if (e.response.status === 422) {
+                                this.validation.errors = e.response.data.errors
+                                this.validation.message = e.response.data.message
                             } else {
-                                this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
+                                this.$swal.fire(e.response.data.message.title, e.response.data.message.body, e.response.data.message.type)
                             }
                         })
                 }
