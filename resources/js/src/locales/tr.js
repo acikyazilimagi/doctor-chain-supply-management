@@ -52,6 +52,7 @@ const tr = {
         my_account: 'Hesabım',
         account_info: 'Hesap Bilgilerim',
         update_account_info: 'Bilgilerimi Güncelle',
+        change_password: 'Parolamı Güncelle',
     },
     modules: {
         auth: {
@@ -161,7 +162,21 @@ const tr = {
                 specialty: 'Uzmanlık',
                 referenced_persons: 'Referans Olunan Kişiler',
                 confirm_my_friend: 'Arkadaşımı Onayla'
-            }
+            },
+            change_password: {
+                old_password: {
+                    title: 'Parola',
+                    placeholder: 'Lütfen eski parolanızı giriniz.'
+                },
+                password: {
+                    title: 'Yeni Parola',
+                    placeholder: 'Lütfen yeni parolanızı giriniz.'
+                },
+                password_confirmation: {
+                    title: 'Yeni Parola (Tekrar)',
+                    placeholder: 'Lütfen yeni parolanızı tekrar giriniz.'
+                },
+            },
         }
     },
 }
