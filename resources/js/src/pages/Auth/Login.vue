@@ -57,27 +57,17 @@ export default {
         }
     },
     methods: {
-        ...mapActions('global', [
-        'loginUser'
+        ...mapActions('auth', [
+            'loginUser'
         ]),
         async login(){
-            console.log("5")
             const data = {
                 email: this.email,
                 password: this.password,
                 remember: this.remember,
             }
             await axios.get('/sanctum/csrf-cookie').then(async () => {
-                await axios.post('/api/auth/login', data).then(()=>{
-                    this.loginUser()
-                }).catch(({response})=>{
-                    if(response.status===422){
-                        this.validationErrors = response.data.errors
-                    }else{
-                        this.validationErrors = {}
-                        alert(response.data.message)
-                    }
-                })
+                this.loginUser(data)
             })
         },
     }
