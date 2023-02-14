@@ -184,7 +184,7 @@ class AuthController
             ]);
         }else{
             return response()->json([
-                'status' => true,
+                'status' => false,
                 "message" => [
                     "title" => "Hata",
                     "body" => "Teknik bir hata sebebiyle sıfırlama bağlantısı gönderilememiştir.",
@@ -296,7 +296,7 @@ class AuthController
                 "status" => false ,
                 "message" => [
                     "title" => "Hata",
-                    "body" => "Eski Şifre Hatalı Bunun Yerine Şifremi Unuttum Bağlantısını Kullanarak E-Posta üzerinden sıfırlayabilirsiniz!",
+                    "body" => "Eski şifreniz hatalı! Dilerseniz şifremi unuttum bağlantısını kullanarak E-Posta adresinize gelecek sıfırlama bağlantısı ile bu işlemi doğrudan yapabilirsiniz.",
                     "type" => "error",
                 ]
             ]);
