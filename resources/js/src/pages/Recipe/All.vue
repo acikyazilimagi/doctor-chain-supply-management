@@ -9,7 +9,7 @@
         >
             <template #item-status="item">
                 <span class="badge me-2" :class="{'bg-success': item.status, 'bg-warning': !item.status}">{{ item.status ? 'Karşılandı' : 'Bekliyor' }}</span>
-                <span v-if="!item.status && user && item.created_by !== user.id" class="btn btn-sm btn-success" @click.prevent="support(item)">Karşıla</span>
+                <span v-if="!item.status && getUser && item.created_by !== getUser.id" class="btn btn-sm btn-success" @click.prevent="support(item)">Karşıla</span>
             </template>
             <template #expand="item">
                 <div style="padding: 15px">
@@ -38,7 +38,7 @@ import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
 import { support } from '@/src/helpers.js'
 import AddressTable from "@/src/components/Address/Table.vue";
-
+import { mapGetters } from 'vuex';
 export default {
     name: "Recipe.All",
     components: {
@@ -66,9 +66,7 @@ export default {
         this.prepareData()
     },
     computed : {
-        user() {
-            return this.$store.getters['auth/user']
-        }
+        ...mapGetters('auth', ['getUser']),
     },
     methods: {
         support,

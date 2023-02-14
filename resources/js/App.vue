@@ -30,6 +30,7 @@ export default {
     created(){
         this.getRecipeItemCategories()
         this.getSpecialtiesCategories()
+        this.checkAuth()
     },
 
     methods:{
@@ -37,6 +38,9 @@ export default {
             'getRecipeItemCategories',
             'getSpecialtiesCategories'
         ]),
+        ...mapActions('auth', [
+            'checkAuth'
+        ])
     },
 
     watch: {
@@ -44,7 +48,7 @@ export default {
             if (to.meta.layout !== undefined && to.meta.layout.length > 0) {
                 this.layout = to.meta.layout;
             } else {
-                this.layout = "Default";
+                this.layout = "FullWidth";
             }
         },
     },
