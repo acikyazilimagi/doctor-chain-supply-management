@@ -157,7 +157,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('global', ['setUser']),
+        ...mapActions('auth', ['setUser']),
         async prepareUserData(){
             const $this = this
             $this.form_is_loading = true
