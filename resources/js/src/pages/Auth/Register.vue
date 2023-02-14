@@ -255,7 +255,6 @@ export default {
         }
     },
     created() {
-        this.reset()
         this.prepareSpecialties()
 
         const referral_code = this.$router.currentRoute.value.query?.referral_code
@@ -351,7 +350,7 @@ export default {
             this.kvkk_text = null
             this.referral_code = null
 
-            // this.vuelidate$.$reset()
+            this.vuelidate$.$reset()
             this.form_is_posted = false
         },
         async register(e) {
