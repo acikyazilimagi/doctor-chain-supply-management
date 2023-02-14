@@ -15,6 +15,13 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->middleware('guest');
     Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register'])->middleware('guest');
     Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+
+    Route::prefix('password')->group(function(){
+        Route::post('/send-token', [\App\Http\Controllers\AuthController::class, 'passwordTokenGenerate']);
+        Route::get('/check-token/{token?}', [\App\Http\Controllers\AuthController::class, 'passwordTokenCheck']);
+        Route::post('/reset-password',[\App\Http\Controllers\AuthController::class, 'passwordResetWithToken']);
+        Route::post('/reset-password-profile',[\App\Http\Controllers\AuthController::class, 'passwordResetForProfile'])->middleware('auth:sanctum');
+    });
 });
 
 Route::group(['prefix' => 'recipes', 'as' => 'recipe.'], function (){

@@ -1,39 +1,29 @@
 <template>
     <div class="col-12">
         <h1>{{ $t('modules.recipe.title.all_my_recipes') }}</h1>
-        <List :recipes="recipes" />
+        <List :recipes="getMyRecipes" />
     </div>
 </template>
 
 <script>
 import List from "@/src/components/Recipe/List.vue";
 import emitter from '@/EventBus.js'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     name: "Account.Recipe.Index",
     components: {
         List,
     },
-    data(){
-        return {
-            recipes: [],
-        }
+    computed: {
+        ...mapGetters('recipe', ['getMyRecipes'])
     },
     created() {
-        this.prepareData()
-        emitter.on('support-saved', () => this.prepareData())
+        this.fetchMyRecipes()
+        emitter.on('support-saved', () => this.fetchMyRecipes())
     },
     methods: {
-        async prepareData(){
-            const $this = this
-            await this.axios.get('/api/account/recipes/my')
-                .then((response) => {
-                    $this.recipes = response.data.data
-                })
-                .catch((e) => {
-                    this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
-                })
-        }
+        ...mapActions('recipe', ['fetchMyRecipes']),
     }
 }
 </script>

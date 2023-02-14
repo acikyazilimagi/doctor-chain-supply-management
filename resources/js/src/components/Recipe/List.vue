@@ -5,7 +5,7 @@
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#recipe_container_' + recipe.id" aria-expanded="false" :aria-controls="'recipe_container_' + recipe.id">
                     <span class="badge me-2" :class="{'bg-success': recipe.status, 'bg-warning': !recipe.status}">{{ recipe.status ? 'Karşılandı' : 'Bekliyor' }}</span>
                     <span>{{ recipe.title }}</span>
-                    <a v-if="!recipe.status && user && recipe.created_by === user.id" @click.prevent="support(recipe)" class="btn btn-sm btn-info d-inline-flex ms-auto">İhtiyacımı Karşıladım</a>
+                    <a v-if="!recipe.status && getUser && recipe.created_by === getUser.id" @click.prevent="support(recipe)" class="btn btn-sm btn-info d-inline-flex ms-auto">İhtiyacımı Karşıladım</a>
                 </button>
             </h2>
             <div :id="'recipe_container_' + recipe.id" class="accordion-collapse collapse" :aria-labelledby="'recipe_container_' + recipe.id" :data-bs-parent="'#recipe_' + recipe.id">
@@ -37,6 +37,7 @@
 <script>
 import { support } from '@/src/helpers.js'
 import AddressTable from "@/src/components/Address/Table.vue";
+import { mapGetters } from 'vuex';
 
 export default {
     name: "List",
@@ -50,9 +51,9 @@ export default {
         }
     },
     computed : {
-        user() {
-            return this.$store.getters['auth/user']
-        }
+        ...mapGetters('auth', [
+            'getUser'
+        ]),
     },
     methods: {
         support

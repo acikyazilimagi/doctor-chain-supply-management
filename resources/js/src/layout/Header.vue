@@ -10,7 +10,7 @@
                     <li class="nav-item">
                         <router-link class="nav-link" :to="{ name: 'Recipes.All' }">{{ $t('header.all_recipes') }}</router-link>
                     </li>
-                    <template v-if="getUser">
+                    <template v-if="getAuthenticated">
                         <li class="nav-item">
                             <router-link class="nav-link" :to="{ name: 'Recipes.Create' }">{{ $t('header.create_recipe') }}</router-link>
                         </li>
@@ -43,13 +43,13 @@ import {mapActions,mapGetters} from "vuex";
 export default {
     name: "Header",
     computed : {
-        ...mapGetters('global',[
+        ...mapGetters('auth',[
             'getUser',
-            'getAuthenticaded'
+            'getAuthenticated'
         ])
     },
     methods:{
-        ...mapActions('global', [
+        ...mapActions('auth', [
             'logoutUser'
         ]),
     }

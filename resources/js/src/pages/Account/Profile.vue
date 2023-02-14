@@ -47,7 +47,7 @@ import { mapGetters } from 'vuex'
 export default {
     name: "Account.Profile",
     computed : {
-        ...mapGetters('global', [
+        ...mapGetters('auth', [
             'getUser'
         ])
     },
