@@ -14,5 +14,6 @@ class ResetPassword extends Model
     protected $fillable = [
         'email',
         'token',
+        'created_at',
     ];
 }

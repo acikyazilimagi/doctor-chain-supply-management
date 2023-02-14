@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\ResetPassword\ResetWithProfileRequest;
+use App\Http\Requests\Auth\ResetPassword\ResetWithTokenRequest;
+use App\Http\Requests\Auth\ResetPassword\TokenGenerateRequest;
 use App\Models\ReferralLink;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -129,21 +132,8 @@ class AuthController
         return Auth::guard($guard);
     }
 
-    /**
-     * PasswordTokenGenerate Generate Token For Reset Password
-     *
-     * @param[string] email
-     * @return \Illuminate\Http\JsonResponse
-     *
-     */
-    public function passwordTokenGenerate(Request $request) {
-
-        $data = $request->validate([
-            'email' => 'required|string|email|exist:users'
-        ]);
-
-        $user = User::where('email', $data['email'])->first();
-
+    public function passwordTokenGenerate(TokenGenerateRequest $request) {
+        $user = User::where('email', $request->get('email'))->first();
         if (!$user) {
             return response()->json([
                 "status" => false ,
@@ -155,17 +145,16 @@ class AuthController
             ]);
         }
 
-        $count = ResetPassword::where('email',$data['email'])->count();
+        $count = ResetPassword::where('email',$request->get('email'))->count();
         if($count){
-            $record = ResetPassword::where('email',$data['email'])->last();
-            $lastGenTime = $record->created_at;
-            $differenceTime = Carbon::now()->timestamp - strtotime($lastGenTime);
-            if($differenceTime<180){
+            $record = ResetPassword::where('email',$request->get('email'))->first();
+            $differenceTime = Carbon::parse($record->created_at)->diffInMinutes();
+            if($differenceTime<3){
                 return response()->json([
                     'status' => false,
                     "message" => [
                         "title" => "Hata!",
-                        "body" => "Zaten bir sıfırlama bağlantısı talebiniz mevcut. Lütfen e-posta kutunuzu kontrol edin.",
+                        "body" => "Kısa bir süre önce sıfırlama bağlantısı talep ettiniz. Lütfen e-posta kutunuzu kontrol edin.",
                         "type" => "error",
                     ]
                 ]);
@@ -179,8 +168,10 @@ class AuthController
             [
                 'email' => $user->email,
                 'token' => Str::random(45),
+                'created_at' => now(),
             ]
         );
+        $resetPassword->save();
         if ($user && $resetPassword) {
             //TODO:: Maile Sıfırlama Linki Gönderilecek @param $resetpassword->token.
             return response()->json([
@@ -191,18 +182,20 @@ class AuthController
                     "type" => "success",
                 ]
             ]);
+        }else{
+            return response()->json([
+                'status' => true,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Teknik bir hata sebebiyle sıfırlama bağlantısı gönderilememiştir.",
+                    "type" => "error",
+                ]
+            ]);
         }
     }
-    /**
-     * If Click Link On Mail Check Token Status
-     *
-     * @param[string] token
-     * @return \Illuminate\Http\JsonResponse
-     *
-     */
     public function passwordTokenCheck($token) {
         $resetpassword = ResetPassword::where('token', $token)->first();
-        if (!$token) {
+        if (!$resetpassword) {
             return response()->json([
                 "status" => false ,
                 "message" => [
@@ -232,28 +225,11 @@ class AuthController
             ]
         ]);
     }
-    /**
-     * PasswordResetWithToken Reset Password
-     *
-     * @param[string] email
-     * @param[string] password
-     * @param[string] password_confirmation
-     * @param[string] token
-     * @return \Illuminate\Http\JsonResponse
-     *
-     */
-    public function passwordResetWithToken(Request $request) {
-        $data = $request->validate([
-            'email' => 'required|string|email|exists:users',
-            'token' => 'required|string',
-            'password' => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|string|min:8',
-        ]);
-
+    public function passwordResetWithToken(ResetWithTokenRequest $request) {
         $resetPassword = ResetPassword::updateOrCreate(
             [
-                'email' => $data['email'],
-                'token' => $data['token'],
+                'email' => $request->get('email'),
+                'token' => $request->get('token'),
             ]
         )->first();
         if (!$resetPassword) {
@@ -277,7 +253,7 @@ class AuthController
                 ]
             ]);
         }
-        $user->password = bcrypt($request->password);
+        $user->password = bcrypt($request->get('password'));
 
         if($user->save()){
             $resetPassword->delete();
@@ -303,22 +279,7 @@ class AuthController
 
         }
     }
-    /**
-     * ProfilePasswordReset For Profile in User
-     *
-     * @param[string] old_password
-     * @param[string] password
-     * @param[string] password_confirmation
-     * @return \Illuminate\Http\JsonResponse
-     *
-     */
-    public function passwordResetForProfile(Request $request) {
-        $data = $request->validate([
-            'old_password' => 'required|string|min:8',
-            'password' => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|string|min:8',
-        ]);
-
+    public function passwordResetForProfile(ResetWithProfileRequest $request) {
         $user = User::where('email', Auth::user()->email)->first();
         $storedPassword = User::where('email',Auth::user()->email)->value('password');
         if (!$user) {
@@ -330,7 +291,7 @@ class AuthController
                     "type" => "error",
                 ]
             ]);
-        }elseif(!Hash::check($data['old_password'], $storedPassword)){
+        }elseif(!Hash::check($request->get('old_password'), $storedPassword)){
             return response()->json([
                 "status" => false ,
                 "message" => [
@@ -340,7 +301,7 @@ class AuthController
                 ]
             ]);
         }
-        $user->password = bcrypt($data['password']);
+        $user->password = bcrypt($request->get('password'));
 
         if($user->save()){
             //TODO:: Eposta adresine Şifre değiştiğine dair mail Gönderilecek.
