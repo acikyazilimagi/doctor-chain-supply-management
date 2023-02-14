@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\ProfileUpdatedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\UpdateRequest;
 use App\Http\Requests\Auth\PasswordResetRequest;
@@ -29,10 +30,19 @@ class AccountController extends Controller
 
     public function update(UpdateRequest $request){
         try {
-            $user = auth()->user();
+            $user = User::find(auth()->user()->id);
+
+            $user->createHistory([
+                'name' => $user->name,
+                'email' => $user->email,
+                'specialty' => $user->specialty,
+            ]);
+
             $user->name = $request->get('name');
             $user->specialty = $request->get('specialty');
             $user->save();
+
+            event(new ProfileUpdatedEvent($user));
 
             return response()->json([
                 'status' => true,
