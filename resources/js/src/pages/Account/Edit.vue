@@ -1,69 +1,77 @@
 <template>
     <div class="row justify-content-center">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header">{{ $t('modules.account.edit.title') }}</div>
+            <template v-if="user.isLoading">Kullanıcı verisi alınıyor..</template>
+            <template v-else>
+                <template v-if="user.data.status === false">
+                    <div class="alert alert-danger">{{ user.data.message.body }}</div>
+                </template>
+                <template v-else>
+                    <div class="card">
+                        <div class="card-header">{{ $t('modules.account.edit.title') }}</div>
 
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :vuelidate="vuelidate$" />
-                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :show-header-message="validation.showHeaderMessage" :vuelidate="vuelidate$" />
+                                </div>
 
-                    </div>
+                            </div>
 
-                    <div class="row mb-3">
-                        <label for="name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.name.title') }}</label>
+                            <div class="row mb-3">
+                                <label for="name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.name.title') }}</label>
 
-                        <div class="col-md-6">
-                            <input
-                                id="name"
-                                type="text"
-                                v-model="name"
-                                class="form-control"
-                                name="name"
-                                :placeholder="$t('modules.auth.register.form.name.placeholder')"
-                                :class="{
+                                <div class="col-md-6">
+                                    <input
+                                        id="name"
+                                        type="text"
+                                        v-model="name"
+                                        class="form-control"
+                                        name="name"
+                                        :placeholder="$t('modules.auth.register.form.name.placeholder')"
+                                        :class="{
                                     'is-invalid': vuelidate$.name.$error,
                                     'is-valid': vuelidate$.name.$dirty && !vuelidate$.name.$invalid,
                                 }"
-                                @input="vuelidate$.name.$touch()"
-                                @focus="vuelidate$.name.$touch()"
-                            >
-                            <SingleInputError :vuelidate-object="vuelidate$.name" />
-                        </div>
-                    </div>
+                                        @input="vuelidate$.name.$touch()"
+                                        @focus="vuelidate$.name.$touch()"
+                                    >
+                                    <SingleInputError :vuelidate-object="vuelidate$.name" />
+                                </div>
+                            </div>
 
-                    <div class="row mb-3">
-                        <label for="specialty" class="col-md-4 col-form-label text-md-end">{{ $t('modules.recipe.form.specialty.title') }}</label>
+                            <div class="row mb-3">
+                                <label for="specialty" class="col-md-4 col-form-label text-md-end">{{ $t('modules.recipe.form.specialty.title') }}</label>
 
-                        <div class="col-md-6">
-                            <select
-                                id="specialty"
-                                v-model="specialty"
-                                class="form-control"
-                                name="specialty"
-                                :class="{
+                                <div class="col-md-6">
+                                    <select
+                                        id="specialty"
+                                        v-model="specialty"
+                                        class="form-control"
+                                        name="specialty"
+                                        :class="{
                                     'is-invalid': vuelidate$.specialty.$error,
                                     'is-valid': vuelidate$.specialty.$dirty && !vuelidate$.specialty.$invalid,
                                 }"
-                                @input="vuelidate$.specialty.$touch()"
-                                @focus="vuelidate$.specialty.$touch()"
-                            >
-                                <option :value="null">{{ $t('general.select') }}</option>
-                                <option v-for="specialtiesItem in getSpecialtiesCategories" :value="specialtiesItem.id" :key="'specialty_' + specialtiesItem.id">{{ specialtiesItem.name }}</option>
-                            </select>
-                            <SingleInputError :vuelidate-object="vuelidate$.specialty" />
-                        </div>
-                    </div>
+                                        @input="vuelidate$.specialty.$touch()"
+                                        @focus="vuelidate$.specialty.$touch()"
+                                    >
+                                        <option :value="null">{{ $t('general.select') }}</option>
+                                        <option v-for="specialtiesItem in getSpecialtiesCategories" :value="specialtiesItem.id" :key="'specialty_' + specialtiesItem.id">{{ specialtiesItem.name }}</option>
+                                    </select>
+                                    <SingleInputError :vuelidate-object="vuelidate$.specialty" />
+                                </div>
+                            </div>
 
-                    <div class="row mb-0">
-                        <div class="col-md-6 offset-md-4">
-                            <button type="button" class="btn btn-primary" @click.prevent="update">{{ $t('general.update') }}</button>
+                            <div class="row mb-0">
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="button" class="btn btn-primary" @click.prevent="update">{{ $t('general.update') }}</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </template>
+            </template>
         </div>
     </div>
 </template>
@@ -90,9 +98,12 @@ export default {
     },
     data(){
         return {
-            form_is_loading: true,
-            form_is_posting: false,
             form_is_posted: false,
+
+            user: {
+                isLoading: true,
+                data: null,
+            },
 
             name: null,
             specialty: null,
@@ -107,12 +118,9 @@ export default {
                     specialty: this.$t('modules.auth.register.form.specialty.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
+                showHeaderMessage: false,
             },
         }
-    },
-    created() {
-        this.name = this.getUser.name
-        this.specialty = this.getUser.specialty.id
     },
     computed: {
         backendAndFrontendCombinedErrorsStatus() {
@@ -123,9 +131,11 @@ export default {
             )
         },
         ...mapGetters('global',[
-            'getUser',
             'getSpecialtiesCategories'
         ]),
+    },
+    created() {
+        this.prepareUserData()
     },
     setup() {
         return { vuelidate$: useVuelidate() }
@@ -148,9 +158,23 @@ export default {
     },
     methods: {
         ...mapActions('global', ['setUser']),
+        async prepareUserData(){
+            const $this = this
+            $this.form_is_loading = true
+            await axios
+                .get('/api/account/profile')
+                .then((response) => {
+                    $this.user.isLoading = false
+                    $this.user.data = response.data
 
-        selectFile(event) {
-            this.file = event.target.files[0];
+                    $this.name = response.data.data.name
+                    $this.specialty = $this.user.data.data.specialty ? $this.user.data.data.specialty.id : null
+                    $this.vuelidate$.$reset()
+                })
+                .catch((e) => {
+                    $this.form_is_loading = false
+                    this.$swal.fire(e.response.data.message.title, e.response.data.message.body, e.response.data.message.type)
+                })
         },
         async update(e) {
             const $this = this
@@ -175,21 +199,20 @@ export default {
                 showCancelButton: true,
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await $this.axios.post('/api/account/update', data)
+                    await $this.axios.put('/api/account/profile', data)
                         .then((response) => {
-                            if (response.status) {
+                            if (response.data.status) {
                                 this.setUser()
-                                this.$swal.fire(this.$t('general.success'), response.data.message, 'success')
-                            } else {
-                                this.$swal.fire(this.$t('general.error'), response.data.message, 'danger')
+                                $this.vuelidate$.$reset()
                             }
+                            this.$swal.fire(response.data.message.title, response.data.message.body, response.data.message.type)
                         })
                         .catch((e) => {
-                            if (e.statusCode === 422) {
-                                state.validationProp.errors = e.data.errors
-                                state.validationProp.message = e.data.message
+                            if (e.response.status === 422) {
+                                this.validation.errors = e.response.data.errors
+                                this.validation.message = e.response.data.message
                             } else {
-                                this.$swal.fire(this.$t('general.error'), e.response.data.message, 'error')
+                                this.$swal.fire(e.response.data.message.title, e.response.data.message.body, e.response.data.message.type)
                             }
                         })
                 }
