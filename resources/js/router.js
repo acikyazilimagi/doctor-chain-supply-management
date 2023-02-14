@@ -78,6 +78,14 @@ const routes = [
                     middleware: "auth"
                 }
             },
+            {
+                path: '/parola-degistir',
+                component: () => import(/* webpackChunkName: "AccountChangePassword" */ '@/src/pages/Account/ChangePassword.vue'),
+                name: 'Account.Profile.ChangePassword',
+                meta: {
+                    middleware: "auth"
+                }
+            },
         ]
     },
     {
