@@ -1,15 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user()->with([
-        'specialty' => function($query){
-            $query->select(['id', 'name']);
-        }
-    ])->first()->toArray();
-});
+Route::middleware('auth:sanctum')->get('/user', [\App\Http\Controllers\AuthController::class, 'user']);
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->middleware('guest');

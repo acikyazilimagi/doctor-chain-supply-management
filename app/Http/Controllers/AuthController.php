@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\ResetPassword\ResetWithProfileRequest;
 use App\Http\Requests\Auth\ResetPassword\ResetWithTokenRequest;
 use App\Http\Requests\Auth\ResetPassword\TokenGenerateRequest;
 use App\Http\Requests\Auth\LoginRequest;
@@ -145,6 +144,18 @@ class AuthController
                 "type" => "success",
             ]
         ]);
+    }
+
+    public function user(Request $request){
+        return User::select(['id', 'name', 'email', 'specialty'])
+            ->where(['id' => auth()->user()->id])
+            ->with([
+                'specialty' => function($query){
+                    $query->select(['id', 'name']);
+                }
+            ])
+            ->first()
+            ->toArray();
     }
 
     public function guard($guard = 'web')
