@@ -99,7 +99,6 @@ const router = createRouter({
     routes,
 })
 
-
 router.isReady().then(async () => {
     // Tarayıcıda oturum kalmış ama sunucuda oturum süresi bitmiş ise sayfa ilk açıldığında oturum kontrolü yaparak gerekli eylemi gerçekleştiriyor.
     if (store.getters['auth/getAuthenticated'] === true){
@@ -110,21 +109,31 @@ router.isReady().then(async () => {
         })
     }
 
-    // router.beforeEach((to, from, next) => {
-    //     if (store.getters['user/getUser']) {
-    //         if (to.matched.some(route => route.meta.middleware === 'guest')){
-    //             next({ name: 'Index' })
-    //         }else{
-    //             next();
-    //         }
-    //     } else {
-    //         if (to.matched.some(route => route.meta.middleware === 'auth')) {
-    //             next({ name: 'Auth.Login' })
-    //         }else{
-    //             next();
-    //         }
-    //     }
-    // })
+    if (store.getters['auth/getUser']) {
+        if (router.currentRoute.value.meta.middleware === 'guest'){
+            router.replace({ name: 'Index' })
+        }
+    }else{
+        if (router.currentRoute.value.meta.middleware === 'auth'){
+            router.replace({ name: 'Index' })
+        }
+    }
+
+    router.beforeEach((to, from, next) => {
+        if (store.getters['auth/getUser']) {
+            if (to.matched.some(route => route.meta.middleware === 'guest')){
+                next({ name: 'Index' })
+            }else{
+                next();
+            }
+        } else {
+            if (to.matched.some(route => route.meta.middleware === 'auth')) {
+                next({ name: 'Auth.Login' })
+            }else{
+                next();
+            }
+        }
+    })
 })
 
 export default router
