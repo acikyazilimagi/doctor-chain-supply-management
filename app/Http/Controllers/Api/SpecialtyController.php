@@ -8,7 +8,7 @@ use App\Models\Specialty;
 class SpecialtyController extends Controller
 {
     public function index(){
-        $specialties = Specialty::all();
+        $specialties = Specialty::select(['id', 'name'])->get();
 
         return response()->json([
             "status" => true,
