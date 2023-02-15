@@ -12,11 +12,33 @@ class RecipeController extends Controller
 {
     public function my(){
         $recipes = Recipe::
-            where(['created_by' => auth()->user()->id])
-            ->with([
-                'items',
-                'address'
+            select([
+              'id',
+              'title',
+              'description',
+              'status'
             ])
+            ->with([
+              'items' => function($q){
+                  $q->select([
+                      'recipe_id',
+                      'name',
+                      'count',
+                      'category_id',
+                  ]);
+              },
+              'address' => function($q){
+                  $q->select([
+                      'model_class',
+                      'model_id',
+                      'city',
+                      'district',
+                      'neighbourhood',
+                      'address_detail',
+                  ]);
+              },
+            ])
+            ->where(['created_by' => auth()->user()->id])
             ->orderByDesc('id')
             ->get();
 
@@ -28,9 +50,31 @@ class RecipeController extends Controller
 
     public function latests(){
         $recipes = Recipe::
-            with([
-                'items',
-                'address'
+            select([
+                'id',
+                'title',
+                'description',
+                'status'
+            ])
+            ->with([
+                'items' => function($q){
+                    $q->select([
+                        'recipe_id',
+                        'name',
+                        'count',
+                        'category_id',
+                    ]);
+                },
+                'address' => function($q){
+                    $q->select([
+                        'model_class',
+                        'model_id',
+                        'city',
+                        'district',
+                        'neighbourhood',
+                        'address_detail',
+                    ]);
+                },
             ])
             ->orderByDesc('id')
             ->latest()
@@ -45,9 +89,31 @@ class RecipeController extends Controller
 
     public function all(){
         $recipes = Recipe::
-             with([
-                'items',
-                'address'
+            select([
+                'id',
+                'title',
+                'description',
+                'status'
+            ])
+            ->with([
+                'items' => function($q){
+                    $q->select([
+                        'recipe_id',
+                        'name',
+                        'count',
+                        'category_id',
+                    ]);
+                },
+                'address' => function($q){
+                    $q->select([
+                        'model_class',
+                        'model_id',
+                        'city',
+                        'district',
+                        'neighbourhood',
+                        'address_detail',
+                    ]);
+                },
             ])
             ->orderByDesc('id')
             ->paginate(100000);
