@@ -63,8 +63,8 @@ export default {
         return {
             form_is_posted: false,
 
-            email: "sakir.mehmetoglu@gmail.com",
-            password: "12345678",
+            email: null,
+            password: null,
             remember: true,
 
             validation: {
