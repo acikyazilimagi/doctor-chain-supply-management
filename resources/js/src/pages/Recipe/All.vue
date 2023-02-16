@@ -6,6 +6,8 @@
             :loading="loading"
             :headers="headers"
             :items="items"
+            buttons-pagination
+            :rows-per-page="serverOptions.rowsPerPage"
         >
             <template #item-status="item">
                 <span class="badge me-2" :class="{'bg-success': item.status, 'bg-warning': !item.status}">{{ item.status ? 'Karşılandı' : 'Bekliyor' }}</span>
@@ -44,13 +46,18 @@ export default {
         AddressTable,
         'EasyDataTable': Vue3EasyDataTable
     },
+    watch:{
+        serverOptions(){
+            this.prepareData();
+        }
+    },
     data(){
         return {
             loading: true,
             serverItemsLength: 0,
             serverOptions: {
                 page: 1,
-                rowsPerPage: 5,
+                rowsPerPage: 15,
                 sortBy: 'age',
                 sortType: 'desc',
             },
@@ -69,7 +76,7 @@ export default {
         async prepareData(){
             const $this = this
             $this.loading = true;
-            await this.axios.get('/api/recipes/all')
+            await this.axios.get(`/api/recipes/all?per_page=${this.serverOptions.rowsPerPage}&page=${this.serverOptions.page}`)
                 .then((response) => {
                     $this.items = response.data.data.data
                     $this.loading = false;
