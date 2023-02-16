@@ -49,7 +49,6 @@ export default {
     watch:{
         serverOptions(){
             this.prepareData();
-            console.log('serverOptions changed')
         }
     },
     data(){
