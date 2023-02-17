@@ -39,7 +39,7 @@ Route::group(['prefix' => 'address', 'as' => 'address.'], function (){
 Route::group(['prefix' => 'account', 'as' => 'account.'], function (){
     Route::get('/profile', [\App\Http\Controllers\Api\AccountController::class, 'show'])->name('show')->middleware('auth:sanctum');
     Route::put('/profile', [\App\Http\Controllers\Api\AccountController::class, 'update'])->name('update')->middleware('auth:sanctum');
-    Route::put('/password_reset', [\App\Http\Controllers\Api\AccountController::class, 'password_reset'])->name('password_reset')->middleware('auth:sanctum');
+    Route::put('/update_password', [\App\Http\Controllers\Api\AccountController::class, 'update_password'])->name('update_password')->middleware('auth:sanctum');
 
     Route::group(['prefix' => 'recipes', 'as' => 'recipe.'], function (){
         Route::post('/', [\App\Http\Controllers\Api\RecipeController::class, 'store'])->name('store')->middleware('auth:sanctum');
