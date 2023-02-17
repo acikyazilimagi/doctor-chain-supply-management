@@ -10,10 +10,8 @@ Route::prefix('auth')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
 
     Route::prefix('password')->group(function(){
-        Route::post('/send-token', [\App\Http\Controllers\AuthController::class, 'passwordTokenGenerate']);
-        Route::get('/check-token/{token?}', [\App\Http\Controllers\AuthController::class, 'passwordTokenCheck']);
-        Route::post('/reset-password',[\App\Http\Controllers\AuthController::class, 'passwordResetWithToken']);
-        Route::post('/reset-password-profile',[\App\Http\Controllers\AuthController::class, 'passwordResetForProfile'])->middleware('auth:sanctum');
+        Route::post('/email', [\App\Http\Controllers\AuthController::class, 'sendPasswordResetLink']);
+        Route::post('/reset', [\App\Http\Controllers\AuthController::class, 'resetPassword']);
     });
 });
 

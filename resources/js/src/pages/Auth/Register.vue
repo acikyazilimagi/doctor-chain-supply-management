@@ -205,6 +205,7 @@ import AddressForm from "@/src/components/Address/Form.vue";
 import BackendAndFrontendCombined from "@/src/components/ValidationMessages/BackendAndFrontendCombined.vue";
 import SingleInputError from "@/src/components/ValidationMessages/SingleInputError.vue";
 import useVuelidate from '@vuelidate/core'
+import emitter from '@/EventBus.js'
 
 import {
     required,
@@ -261,6 +262,8 @@ export default {
         if (referral_code){
             this.referral_code = referral_code
         }
+
+        emitter.emit('set-title', 'Kayıt Ol')
     },
     computed: {
         backendAndFrontendCombinedErrorsStatus() {
@@ -311,12 +314,12 @@ export default {
                 $lazy: true,
             },
             legal_text: {
-                required,
+                sameAs: sameAs(true),
                 $autoDirty: true,
                 $lazy: true,
             },
             kvkk_text: {
-                required,
+                sameAs: sameAs(true),
                 $autoDirty: true,
                 $lazy: true,
             },
