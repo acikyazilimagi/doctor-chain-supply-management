@@ -1,41 +1,30 @@
 <template>
-    <nav class="navbar navbar-expand bg-light">
-        <div class="container-fluid">
-            <router-link class="navbar-brand" :to="{ name: 'Index' }">{{ $t('header.project_name') }}</router-link>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <router-link class="nav-link" :to="{ name: 'Recipes.All' }">{{ $t('header.all_recipes') }}</router-link>
-                    </li>
-                    <template v-if="getAuthenticated">
-                        <li class="nav-item">
-                            <router-link class="nav-link" :to="{ name: 'Recipes.Create' }">{{ $t('header.create_recipe') }}</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link class="nav-link" :to="{ name: 'Recipes.Index' }">{{ $t('header.all_my_recipes') }}</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link class="nav-link" :to="{ name: 'Account.Profile.Index' }">{{ $t('header.my_account') }}</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" @click="logoutUser">{{ $t('general.logout') }}</a>
-                        </li>
-                    </template>
-                    <template v-else>
-                        <li class="nav-item">
-                            <router-link class="nav-link" :to="{ name: 'Auth.Register' }">{{ $t('general.register') }}</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link class="nav-link" :to="{ name: 'Auth.Login' }">{{ $t('general.login') }}</router-link>
-                        </li>
-                    </template>
-                </ul>
+    <div class="container-fluid">
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <router-link class="d-flex align-items-center mb-2 mb-md-0 text-dark text-decoration-none" :to="{ name: 'Index' }">{{ $t('header.project_name') }}</router-link>
+
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><router-link class="nav-link px-2 link-dark" :to="{ name: 'Recipes.All' }">{{ $t('header.all_recipes') }}</router-link></li>
+                <li><router-link class="nav-link px-2 link-dark" :to="{ name: 'DynamicContent', params: {slug: 'riza-metni'} }">Rıza Metni</router-link></li>
+
+                <template v-if="getAuthenticated">
+                    <li><router-link class="nav-link px-2 link-dark" :to="{ name: 'Account.Recipes.Create' }">{{ $t('header.create_recipe') }}</router-link></li>
+                    <li><router-link class="nav-link px-2 link-dark" :to="{ name: 'Account.Recipes.Index' }">{{ $t('header.all_my_recipes') }}</router-link></li>
+                    <li><router-link class="nav-link px-2 link-dark" :to="{ name: 'Account.Profile.Index' }">{{ $t('header.my_account') }}</router-link></li>
+                </template>
+            </ul>
+
+            <div class="text-end">
+                <template v-if="getAuthenticated">
+                    <a href="#" class="btn btn-info" @click="logoutUser">{{ $t('general.logout') }}</a>
+                </template>
+                <template v-else>
+                    <router-link class="btn btn-primary" :to="{ name: 'Auth.Register' }">{{ $t('general.register') }}</router-link>
+                    <router-link class="btn btn-primary" :to="{ name: 'Auth.Login' }">{{ $t('general.login') }}</router-link>
+                </template>
             </div>
-        </div>
-    </nav>
+        </header>
+    </div>
 </template>
 
 <script>
