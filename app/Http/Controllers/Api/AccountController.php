@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\ProfileUpdatedEvent;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Account\UpdatePasswordRequest;
 use App\Http\Requests\Account\UpdateRequest;
-use App\Http\Requests\Auth\PasswordResetRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -64,7 +64,7 @@ class AccountController extends Controller
         }
     }
 
-    public function password_reset(PasswordResetRequest $request) {
+    public function update_password(UpdatePasswordRequest $request) {
         try {
             $user = User::where('email', auth()->user()->email)->first();
 

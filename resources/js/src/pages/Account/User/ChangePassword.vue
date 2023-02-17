@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">{{ $t('modules.account.edit.title') }}</div>
+                <div class="card-header">{{ $t('modules.account.change_password.title') }}</div>
 
                 <div class="card-body">
                     <div class="row">
@@ -94,6 +94,7 @@ import AddressForm from "@/src/components/Address/Form.vue";
 import BackendAndFrontendCombined from "@/src/components/ValidationMessages/BackendAndFrontendCombined.vue";
 import SingleInputError from "@/src/components/ValidationMessages/SingleInputError.vue";
 import useVuelidate from '@vuelidate/core'
+import emitter from '@/EventBus.js'
 
 import {
     maxLength,
@@ -138,6 +139,9 @@ export default {
             )
         },
     },
+    created() {
+        emitter.emit('set-title', 'Parola Değiştir')
+    },
     setup() {
         return { vuelidate$: useVuelidate() }
     },
@@ -168,6 +172,14 @@ export default {
         }
     },
     methods: {
+        reset() {
+            this.old_password = null
+            this.password = null
+            this.password_confirmation = null
+
+            this.vuelidate$.$reset()
+            this.form_is_posted = false
+        },
         async update(e) {
             const $this = this
             e.preventDefault()
@@ -192,10 +204,10 @@ export default {
                 showCancelButton: true,
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await $this.axios.put('/api/account/password_reset', data)
+                    await $this.axios.put('/api/account/update_password', data)
                         .then((response) => {
                             if (response.data.status) {
-                                $this.vuelidate$.$reset()
+                                $this.reset()
                             }
                             this.$swal.fire(response.data.message.title, response.data.message.body, response.data.message.type)
                         })
