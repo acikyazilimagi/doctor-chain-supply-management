@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Recipe\ChangeStatusRequest;
 use App\Http\Requests\Recipe\StoreRequest;
 use App\Models\Recipe;
-use App\Models\RecipeItem;
+use App\Models\RecipeItemCategory;
 
 class RecipeController extends Controller
 {
@@ -16,7 +16,8 @@ class RecipeController extends Controller
               'id',
               'title',
               'description',
-              'status'
+              'status',
+              'created_by',
             ])
             ->with([
               'items' => function($q){
@@ -25,6 +26,11 @@ class RecipeController extends Controller
                       'name',
                       'count',
                       'category_id',
+                  ])->with([
+                      'category' => function($q){
+                          $q
+                              ->select(['id', 'name']);
+                      }
                   ]);
               },
               'address' => function($q){
@@ -54,7 +60,8 @@ class RecipeController extends Controller
                 'id',
                 'title',
                 'description',
-                'status'
+                'status',
+                'created_by',
             ])
             ->with([
                 'items' => function($q){
@@ -63,6 +70,11 @@ class RecipeController extends Controller
                         'name',
                         'count',
                         'category_id',
+                    ])->with([
+                        'category' => function($q){
+                            $q
+                                ->select(['id', 'name']);
+                        }
                     ]);
                 },
                 'address' => function($q){
@@ -90,13 +102,14 @@ class RecipeController extends Controller
     public function all(){
         $per_page = is_numeric(request('per_page')) ? request('per_page') : 15;
         $page = is_numeric(request('page')) ? request('page') : 1;
-        
+
         $recipes = Recipe::
             select([
                 'id',
                 'title',
                 'description',
-                'status'
+                'status',
+                'created_by',
             ])
             ->with([
                 'items' => function($q){
@@ -105,6 +118,11 @@ class RecipeController extends Controller
                         'name',
                         'count',
                         'category_id',
+                    ])->with([
+                        'category' => function($q){
+                            $q
+                                ->select(['id', 'name']);
+                        }
                     ]);
                 },
                 'address' => function($q){
@@ -200,7 +218,7 @@ class RecipeController extends Controller
     }
 
     public function recipe_item_categories(){
-        $categories = RecipeItem::categories();
+        $categories = RecipeItemCategory::select(['id', 'name'])->get();
 
         return response()->json([
             "status" => true,

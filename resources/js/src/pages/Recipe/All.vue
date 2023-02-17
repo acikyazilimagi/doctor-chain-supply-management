@@ -39,6 +39,7 @@ import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
 import { support } from '@/src/helpers.js'
 import AddressTable from "@/src/components/Address/Table.vue";
+import emitter from '@/EventBus.js'
 
 export default {
     name: "Recipe.All",
@@ -57,7 +58,7 @@ export default {
             serverItemsLength: 0,
             serverOptions: {
                 page: 1,
-                rowsPerPage: 15,
+                rowsPerPage: 150,
                 sortBy: 'age',
                 sortType: 'desc',
             },
@@ -70,6 +71,7 @@ export default {
     },
     created() {
         this.prepareData()
+        emitter.emit('set-title', 'Tüm İstekler')
     },
     methods: {
         support,
