@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\ResetPassword\ResetWithTokenRequest;
-use App\Http\Requests\Auth\ResetPassword\TokenGenerateRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\ResetPassword\ResetWithTokenRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Models\PasswordReset;
 use App\Models\ReferralLink;
 use App\Models\User;
+use App\Notifications\PasswordResetNotification;
+use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\ResetPassword;
-use Carbon\Carbon;
 
 class AuthController
 {
@@ -110,6 +111,7 @@ class AuthController
                     ]
                 ]);
             }else{
+                $this->guard()->logout();
                 return response()->json([
                     "status" => false ,
                     "message" => [
@@ -163,7 +165,7 @@ class AuthController
         return Auth::guard($guard);
     }
 
-    public function passwordTokenGenerate(TokenGenerateRequest $request) {
+    public function sendPasswordResetLink(ResetPasswordRequest $request) {
         $user = User::where('email', $request->get('email'))->first();
         if (!$user) {
             return response()->json([
@@ -176,9 +178,9 @@ class AuthController
             ]);
         }
 
-        $count = ResetPassword::where('email',$request->get('email'))->count();
+        $count = PasswordReset::where('email',$request->get('email'))->count();
         if($count){
-            $record = ResetPassword::where('email',$request->get('email'))->first();
+            $record = PasswordReset::where('email',$request->get('email'))->first();
             $differenceTime = Carbon::parse($record->created_at)->diffInMinutes();
             if($differenceTime<3){
                 return response()->json([
@@ -192,19 +194,22 @@ class AuthController
             }
         }
 
-        $resetPassword = ResetPassword::updateOrCreate(
+        $token = Str::random(60);
+        $resetPassword = PasswordReset::updateOrCreate(
             [
                 'email' => $user->email,
             ],
             [
                 'email' => $user->email,
-                'token' => Str::random(45),
+                'token' => $token,
                 'created_at' => now(),
             ]
         );
-        $resetPassword->save();
-        if ($user && $resetPassword) {
-            //TODO:: Maile Sıfırlama Linki Gönderilecek @param $resetpassword->token.
+        $result = $resetPassword->save();
+
+        if ($result) {
+            $user->sendPasswordResetNotification($token);
+
             return response()->json([
                 'status' => true,
                 "message" => [
@@ -225,57 +230,32 @@ class AuthController
         }
     }
 
-    public function passwordTokenCheck($token) {
-        $resetpassword = ResetPassword::where('token', $token)->first();
-        if (!$resetpassword) {
-            return response()->json([
-                "status" => false ,
-                "message" => [
-                    "title" => "Hata",
-                    "body" => "Bağlantı geçersiz!",
-                    "type" => "error",
-                ]
-            ]);
-        }
-        if (Carbon::parse($resetpassword->created_at)->addMinutes(720)->isPast()) {
-            $resetpassword->delete();
-            return response()->json([
-                "status" => false ,
-                "message" => [
-                    "title" => "Hata",
-                    "body" => "Bağlantı geçersiz!",
-                    "type" => "error",
-                ]
-            ]);
-        }
-        return response()->json([
-            "status" => true ,
-            "message" => [
-                "title" => "Başarılı",
-                "body" => '',
-                "type" => "success",
-            ]
-        ]);
-    }
-
-    public function passwordResetWithToken(ResetWithTokenRequest $request) {
-        $resetPassword = ResetPassword::updateOrCreate(
-            [
-                'email' => $request->get('email'),
-                'token' => $request->get('token'),
-            ]
-        )->first();
+    public function resetPassword(ResetWithTokenRequest $request) {
+        $resetPassword = PasswordReset::where(['email' => $request->get('email'), 'token' => $request->get('token')])->first();
         if (!$resetPassword) {
             return response()->json([
                 "status" => false ,
                 "message" => [
                     "title" => "Hata",
-                    "body" => "Mail adresi bulunamadı!",
+                    "body" => "Parola yenileme talebi bulunamadı. Yanlış link kullanıyor olabilirsiniz.",
                     "type" => "error",
                 ]
             ]);
         }
-        $user = User::where('email', $resetPassword->email)->first();
+
+        $differenceTime = Carbon::parse($resetPassword->created_at)->diffInMinutes();
+        if ($differenceTime > 60){
+            return response()->json([
+                "status" => false ,
+                "message" => [
+                    "title" => "Hata",
+                    "body" => "Parola yenileme talebinizin süresi dolmuştur. Lütfen başka bir talepte bulununuz.",
+                    "type" => "error",
+                ]
+            ]);
+        }
+
+        $user = User::where(['email' => $resetPassword->email])->first();
         if (!$user) {
             return response()->json([
                 "status" => false ,
@@ -286,12 +266,14 @@ class AuthController
                 ]
             ]);
         }
+
         $user->password = bcrypt($request->get('password'));
 
         if($user->save()){
             $resetPassword->delete();
-            //Şifre değiştildiğine dair bağlantı için $resetpassword->token olarak kullanabilirsiniz.
-            //TODO:: Eposta adresine Şifre değiştiğine dair mail Gönderilecek.
+
+            $user->notify(new PasswordResetNotification());
+
             return response()->json([
                 'status' => true,
                 "message" => [

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\RecipeItem;
+use App\Models\RecipeItemCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RecipeItemFactory extends Factory
@@ -18,12 +18,12 @@ class RecipeItemFactory extends Factory
             'Eldiven',
             'Serum',
         ];
-        $categories = RecipeItem::categories();
+        $categories = RecipeItemCategory::all();
 
         return [
             'name' => $medicines[array_rand($medicines)],
             'count' => mt_rand(1, 7),
-            'category_id' => $categories[array_rand($categories)]['id'],
+            'category_id' => $categories->random()->id,
         ];
     }
 }

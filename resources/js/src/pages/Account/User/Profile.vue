@@ -58,11 +58,14 @@
 </template>
 
 <script>
+import emitter from '@/EventBus.js'
+
 export default {
     name: "Account.Profile",
     created() {
         this.prepareUserData()
         this.prepareReferralLinks()
+        emitter.emit('set-title', 'Hesabım')
     },
     data(){
         return {

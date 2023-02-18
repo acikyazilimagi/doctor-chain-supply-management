@@ -65,6 +65,7 @@
 
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
+                                    <button type="button" class="btn btn-danger" @click.prevent="reset">{{ $t('general.reset') }}</button>
                                     <button type="button" class="btn btn-primary" @click.prevent="update">{{ $t('general.update') }}</button>
                                 </div>
                             </div>
@@ -81,6 +82,7 @@ import AddressForm from "@/src/components/Address/Form.vue";
 import BackendAndFrontendCombined from "@/src/components/ValidationMessages/BackendAndFrontendCombined.vue";
 import SingleInputError from "@/src/components/ValidationMessages/SingleInputError.vue";
 import useVuelidate from '@vuelidate/core'
+import emitter from '@/EventBus.js'
 
 import {
     maxLength,
@@ -136,6 +138,7 @@ export default {
     },
     created() {
         this.prepareUserData()
+        emitter.emit('set-title', 'Hesabımı Düzenle')
     },
     setup() {
         return { vuelidate$: useVuelidate() }
@@ -158,6 +161,13 @@ export default {
     },
     methods: {
         ...mapActions('auth', ['setUser']),
+        reset() {
+            this.name = this.user.data.data.name
+            this.specialty = this.user.data.data.specialty ? this.user.data.data.specialty.id : null
+
+            this.vuelidate$.$reset()
+            this.form_is_posted = false
+        },
         async prepareUserData(){
             const $this = this
             $this.form_is_loading = true
@@ -166,10 +176,7 @@ export default {
                 .then((response) => {
                     $this.user.isLoading = false
                     $this.user.data = response.data
-
-                    $this.name = response.data.data.name
-                    $this.specialty = $this.user.data.data.specialty ? $this.user.data.data.specialty.id : null
-                    $this.vuelidate$.$reset()
+                    $this.reset()
                 })
                 .catch((e) => {
                     $this.form_is_loading = false

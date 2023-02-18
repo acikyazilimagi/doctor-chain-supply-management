@@ -20,24 +20,8 @@ const routes = [
         },
     },
     {
-        path: '/yeni-istek-olustur',
-        component: () => import(/* webpackChunkName: "AccountRecipeCreate" */ '@/src/pages/Account/Recipe/Create.vue'),
-        name: 'Recipes.Create',
-        meta: {
-            layout: 'FullWidth',
-            middleware: "auth"
-        },
-    },
-    {
-        path: '/istek-listem',
-        component: () => import(/* webpackChunkName: "AccountRecipeIndex" */ '@/src/pages/Account/Recipe/Index.vue'),
-        name: 'Recipes.Index',
-        meta: {
-            layout: 'FullWidth',
-            middleware: "auth"
-        },
-    },
-    {
+        path: '/auth',
+        redirect: '/auth/login',
         component: {
             render() {
                 return h(resolveComponent('router-view'))
@@ -63,27 +47,96 @@ const routes = [
                 }
             },
             {
-                path: '/hesabim',
-                component: () => import(/* webpackChunkName: "AccountProfile" */ '@/src/pages/Account/Profile.vue'),
+                path: '/auth/password/email',
+                component: () => import(/* webpackChunkName: "AuthPasswordReset" */ '@/src/pages/Auth/Password/Email.vue'),
+                name: 'Auth.Password.Email',
+                meta: {
+                    layout: 'FullWidth',
+                    middleware: "guest"
+                }
+            },
+            {
+                path: '/auth/password/reset/:token',
+                component: () => import(/* webpackChunkName: "AuthPasswordReset" */ '@/src/pages/Auth/Password/Reset.vue'),
+                name: 'Auth.Password.Reset',
+                meta: {
+                    layout: 'FullWidth',
+                    middleware: "guest"
+                }
+            },
+        ]
+    },
+    {
+        path: '/hesabim',
+        redirect: '/hesabim/bilgilerim',
+        meta: {
+            middleware: "auth"
+        },
+        component: {
+            render() {
+                return h(resolveComponent('router-view'))
+            },
+        },
+        children: [
+            {
+                path: '/hesabim/bilgilerim',
+                component: () => import(/* webpackChunkName: "AccountUserProfile" */ '@/src/pages/Account/User/Profile.vue'),
                 name: 'Account.Profile.Index',
                 meta: {
                     middleware: "auth"
                 }
             },
             {
-                path: '/hesabimi-guncelle',
-                component: () => import(/* webpackChunkName: "AccountEdit" */ '@/src/pages/Account/Edit.vue'),
+                path: '/hesabim/duzenle',
+                component: () => import(/* webpackChunkName: "AccountUserEdit" */ '@/src/pages/Account/User/Edit.vue'),
                 name: 'Account.Profile.Edit',
                 meta: {
                     middleware: "auth"
                 }
             },
             {
-                path: '/parola-degistir',
-                component: () => import(/* webpackChunkName: "AccountChangePassword" */ '@/src/pages/Account/ChangePassword.vue'),
+                path: '/hesabim/parola-degistir',
+                component: () => import(/* webpackChunkName: "AccountUserChangePassword" */ '@/src/pages/Account/User/ChangePassword.vue'),
                 name: 'Account.Profile.ChangePassword',
                 meta: {
                     middleware: "auth"
+                }
+            },
+            {
+                path: '/hesabim/yeni-istek-olustur',
+                component: () => import(/* webpackChunkName: "AccountRecipeCreate" */ '@/src/pages/Account/Recipe/Create.vue'),
+                name: 'Account.Recipes.Create',
+                meta: {
+                    layout: 'FullWidth',
+                    middleware: "auth"
+                },
+            },
+            {
+                path: '/hesabim/istek-listem',
+                component: () => import(/* webpackChunkName: "AccountRecipeIndex" */ '@/src/pages/Account/Recipe/Index.vue'),
+                name: 'Account.Recipes.Index',
+                meta: {
+                    layout: 'FullWidth',
+                    middleware: "auth"
+                },
+            },
+        ]
+    },
+    {
+        path: '/sayfalar',
+        redirect: '/',
+        component: {
+            render() {
+                return h(resolveComponent('router-view'))
+            },
+        },
+        children: [
+            {
+                path: '/sayfalar/:slug',
+                component: () => import(/* webpackChunkName: "ContentsRizaMetni" */ '@/src/pages/DynamicContent.vue'),
+                name: 'DynamicContent',
+                meta: {
+                    layout: 'FullWidth',
                 }
             },
         ]

@@ -164,6 +164,7 @@ const tr = {
                 confirm_my_friend: 'Arkadaşımı Onayla'
             },
             change_password: {
+                title: 'Parolamı Güncelle',
                 old_password: {
                     title: 'Parola',
                     placeholder: 'Lütfen eski parolanızı giriniz.'

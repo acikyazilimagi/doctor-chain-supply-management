@@ -12,6 +12,7 @@ import Header from "@/src/layout/Header.vue";
 // import Footer from "@/src/layout/Footer.vue";
 import Default from "@/src/layout/Default.vue";
 import FullWidth from "@/src/layout/FullWidth.vue";
+import emitter from '@/EventBus.js'
 
 export default {
     name: "App",
@@ -31,6 +32,7 @@ export default {
         this.getRecipeItemCategories()
         this.getSpecialtiesCategories()
         this.checkAuth()
+        emitter.on('set-title', (title) => document.title = title)
     },
 
     methods:{
@@ -45,6 +47,8 @@ export default {
 
     watch: {
         $route(to) {
+            document.title = to.meta?.title || 'Yükleniyor..'
+
             if (to.meta.layout !== undefined && to.meta.layout.length > 0) {
                 this.layout = to.meta.layout;
             } else {

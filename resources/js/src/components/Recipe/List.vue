@@ -11,16 +11,16 @@
             <div :id="'recipe_container_' + recipe.id" class="accordion-collapse collapse" :aria-labelledby="'recipe_container_' + recipe.id" :data-bs-parent="'#recipe_' + recipe.id">
                 <div class="accordion-body">
                     <div class="row">
-                        <p>{{ recipe.description }}</p>
+                        <p>Açıklama : {{ recipe.description }}</p>
                         <p>{{ $t('modules.recipe.form.address_detail.title') }} : {{ recipe.address?.address_detail }}</p>
                     </div>
                     <div class="row">
                         <div class="col-8">
                             <ul class="list-group">
-                                <li class="list-group-item" v-for="item in recipe.items" :key="'item_' + item.id">
-                                    <span class="badge bg-info p-2 d-inline-flex">{{ item.count }}</span>
-                                    <span>{{ item.name }}</span>
-<!--                                    <span>{{ item.category.name }}</span>-->
+                                <li class="list-group-item d-flex" v-for="item in recipe.items" :key="'item_' + item.id">
+                                    <span class="d-inline-flex me-2 badge bg-info">{{ item.count }}</span>
+                                    <span class="d-inline-flex">{{ item.name }}</span>
+                                    <span class="d-inline-flex ms-auto">{{ item.category?.name }}</span>
                                 </li>
                             </ul>
                         </div>
