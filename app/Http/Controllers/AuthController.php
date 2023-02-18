@@ -111,6 +111,7 @@ class AuthController
                     ]
                 ]);
             }else{
+                $this->guard()->logout();
                 return response()->json([
                     "status" => false ,
                     "message" => [
