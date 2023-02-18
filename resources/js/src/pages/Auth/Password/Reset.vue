@@ -1,41 +1,35 @@
 <template>
     <div class="row justify-content-center">
-        <div class="col-12">
+        <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ $t('modules.account.edit.title') }}</div>
+                <div class="card-header">{{ $t('general.register') }}</div>
 
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :show-header-message="validation.showHeaderMessage" :vuelidate="vuelidate$" />
-                        </div>
+                   <div class="row">
+                       <div class="col-12">
+                           <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :show-header-message="validation.showHeaderMessage" :vuelidate="vuelidate$" />
+                       </div>
 
-                    </div>
+                   </div>
 
                     <div class="row mb-3">
-                        <label for="old_password" class="col-md-4 col-form-label text-md-end">{{ $t('modules.account.change_password.old_password.title') }}</label>
+                        <label for="email" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.email.title') }}</label>
 
                         <div class="col-md-6">
                             <input
-                                id="old_password"
-                                type="password"
-                                v-model="old_password"
+                                id="email"
+                                type="email"
+                                :value="email"
                                 class="form-control"
-                                name="old_password"
-                                :placeholder="$t('modules.account.change_password.old_password.placeholder')"
-                                :class="{
-                                    'is-invalid': vuelidate$.old_password.$error,
-                                    'is-valid': vuelidate$.old_password.$dirty && !vuelidate$.old_password.$invalid,
-                                }"
-                                @input="vuelidate$.old_password.$touch()"
-                                @focus="vuelidate$.old_password.$touch()"
+                                disabled
+                                name="email"
+                                :placeholder="$t('modules.auth.register.form.email.placeholder')"
                             >
-                            <SingleInputError :vuelidate-object="vuelidate$.old_password" />
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="password" class="col-md-4 col-form-label text-md-end">{{ $t('modules.account.change_password.password.title') }}</label>
+                        <label for="password" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.password.title') }}</label>
 
                         <div class="col-md-6">
                             <input
@@ -44,7 +38,7 @@
                                 v-model="password"
                                 class="form-control"
                                 name="password"
-                                :placeholder="$t('modules.account.change_password.password.placeholder')"
+                                :placeholder="$t('modules.auth.register.form.password.placeholder')"
                                 :class="{
                                     'is-invalid': vuelidate$.password.$error,
                                     'is-valid': vuelidate$.password.$dirty && !vuelidate$.password.$invalid,
@@ -57,16 +51,16 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label for="password_confirm" class="col-md-4 col-form-label text-md-end">{{ $t('modules.account.change_password.password_confirmation.title') }}</label>
+                        <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.password_confirmation.title') }}</label>
 
                         <div class="col-md-6">
                             <input
-                                id="password_confirm"
+                                id="password-confirm"
                                 v-model="password_confirmation"
                                 type="password"
                                 class="form-control"
                                 name="password_confirmation"
-                                :placeholder="$t('modules.account.change_password.password_confirmation.placeholder')"
+                                :placeholder="$t('modules.auth.register.form.password_confirmation.placeholder')"
                                 :class="{
                                     'is-invalid': vuelidate$.password_confirmation.$error,
                                     'is-valid': vuelidate$.password_confirmation.$dirty && !vuelidate$.password_confirmation.$invalid,
@@ -80,7 +74,8 @@
 
                     <div class="row mb-0">
                         <div class="col-md-6 offset-md-4">
-                            <button type="button" class="btn btn-primary" @click.prevent="update">{{ $t('general.update') }}</button>
+                            <button type="button" class="btn btn-danger me-auto" @click.prevent="reset">{{ $t('general.reset') }}</button>
+                            <button type="button" class="btn btn-primary" @click.prevent="resetPassword">Güncelle</button>
                         </div>
                     </div>
                 </div>
@@ -94,15 +89,18 @@ import AddressForm from "@/src/components/Address/Form.vue";
 import BackendAndFrontendCombined from "@/src/components/ValidationMessages/BackendAndFrontendCombined.vue";
 import SingleInputError from "@/src/components/ValidationMessages/SingleInputError.vue";
 import useVuelidate from '@vuelidate/core'
+import emitter from '@/EventBus.js'
 
 import {
-    maxLength,
+    required,
     minLength,
-    required, sameAs,
+    maxLength,
+    email,
+    sameAs,
 } from '@vuelidate/validators'
 
 export default {
-    name: "Account.Edit",
+    name: "Auth.Register",
     components: {
         BackendAndFrontendCombined,
         SingleInputError,
@@ -112,22 +110,29 @@ export default {
         return {
             form_is_posted: false,
 
-            old_password: null,
+            email: null,
             password: null,
             password_confirmation: null,
+            token: null,
 
             validation: {
                 errors: [],
                 message: '',
                 validationAttributes: {
-                    old_password: this.$t('modules.account.change_password.old_password.title'),
-                    password: this.$t('modules.account.change_password.password.title'),
-                    password_confirmation: this.$t('modules.account.change_password.password_confirmation.title'),
+                    email: this.$t('modules.auth.register.form.email.title'),
+                    password: this.$t('modules.auth.register.form.password.title'),
+                    password_confirmation: this.$t('modules.auth.register.form.password_confirmation.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
                 showHeaderMessage: false,
             },
         }
+    },
+    created() {
+        this.token = this.$router.currentRoute.value.params.token
+        this.email = this.$router.currentRoute.value.query.email
+
+        emitter.emit('set-title', 'Parola Yenile')
     },
     computed: {
         backendAndFrontendCombinedErrorsStatus() {
@@ -143,13 +148,6 @@ export default {
     },
     validations() {
         return {
-            old_password: {
-                required,
-                minLength: minLength(8),
-                maxLength: maxLength(25),
-                $autoDirty: true,
-                $lazy: true,
-            },
             password: {
                 required,
                 minLength: minLength(8),
@@ -168,7 +166,14 @@ export default {
         }
     },
     methods: {
-        async update(e) {
+        reset() {
+            this.password = null
+            this.password_confirmation = null
+
+            this.vuelidate$.$reset()
+            this.form_is_posted = false
+        },
+        async resetPassword(e) {
             const $this = this
             e.preventDefault()
 
@@ -182,7 +187,8 @@ export default {
             }
 
             const data = {
-                old_password: this.old_password,
+                token: this.token,
+                email: this.email,
                 password: this.password,
                 password_confirmation: this.password_confirmation,
             }
@@ -192,12 +198,15 @@ export default {
                 showCancelButton: true,
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await $this.axios.put('/api/account/password_reset', data)
+                    await $this.axios.post('/api/auth/password/reset', data)
                         .then((response) => {
-                            if (response.data.status) {
-                                $this.vuelidate$.$reset()
-                            }
-                            this.$swal.fire(response.data.message.title, response.data.message.body, response.data.message.type)
+                            this.$swal
+                                .fire(response.data.message.title, response.data.message.body, response.data.message.type)
+                                .then(() => {
+                                    if (response.data.status) {
+                                        $this.$router.push({name:"Auth.Login"})
+                                    }
+                                })
                         })
                         .catch((e) => {
                             if (e.response.status === 422) {

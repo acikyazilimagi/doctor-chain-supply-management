@@ -34,6 +34,7 @@ export default {
     created() {
         this.prepareData()
         emitter.on('support-saved', () => this.prepareData())
+        emitter.emit('set-title', 'Tüm İsteklerim')
     },
     methods: {
         async prepareData(){

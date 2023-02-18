@@ -2,21 +2,23 @@
     <div class="container-fluid mt-5">
         <div class="row justify-content-center">
             <div class="col-12 col-md-6">
-                <router-link :to="{ name: 'Recipes.Create'}" class="btn btn-success col-12">İhtiyaç Listesi Oluştur</router-link>
+                <router-link :to="{ name: 'Account.Recipes.Create'}" class="btn btn-success col-12">İhtiyaç Listesi Oluştur</router-link>
             </div>
 
-            <template v-if="recipes.isLoading">Kullanıcı verisi alınıyor..</template>
-            <template v-else>
-                <template v-if="recipes.data.status === false">
-                    <div class="alert alert-danger">{{ recipes.data.message.body }}</div>
-                </template>
+            <div class="col-12 colm-md-6">
+                <template v-if="recipes.isLoading">İhtiyaç verisi alınıyor..</template>
                 <template v-else>
-                    <div class="col-12 mt-3">
-                        <h2 class="text-center text-danger my-5">Acil Destek Bekleyen İstekler (Son 100 Kayıt)</h2>
-                        <List :recipes="recipes.data.data" />
-                    </div>
+                    <template v-if="recipes.data.status === false">
+                        <div class="alert alert-danger">{{ recipes.data.message.body }}</div>
+                    </template>
+                    <template v-else>
+                        <div class="col-12 mt-3">
+                            <h2 class="text-center text-danger my-5">Acil Destek Bekleyen İstekler (Son 100 Kayıt)</h2>
+                            <List :recipes="recipes.data.data" />
+                        </div>
+                    </template>
                 </template>
-            </template>
+            </div>
         </div>
     </div>
 </template>
@@ -41,6 +43,7 @@ export default {
     created() {
         this.prepareData()
         emitter.on('support-saved', () => this.prepareData())
+        emitter.emit('set-title', 'Anasayfa')
     },
     methods: {
         async prepareData(){

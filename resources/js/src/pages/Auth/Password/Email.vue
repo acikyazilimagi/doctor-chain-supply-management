@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ $t('general.login') }}</div>
+                    <div class="card-header">Parola Sıfırla</div>
 
                     <div class="card-body">
                         <div class="row">
@@ -21,29 +21,9 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.password.title') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" v-model="password" type="password" class="form-control" name="password" required autocomplete="current-password">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" v-model="remember" type="checkbox" name="remember" id="remember">
-
-                                    <label class="form-check-label" for="remember">{{ $t('modules.auth.register.form.remember.title') }}</label>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="button" @click.prevent="login" class="btn btn-primary">{{ $t('general.login') }}</button>
-
-                                <router-link :to="{ name: 'Auth.Password.Email'}" class="btn btn-link">Parolamı Unuttum</router-link>
+                                <button type="button" @click.prevent="sendResetLink" class="btn btn-primary">Parola Yenileme Linki Gönder</button>
                             </div>
                         </div>
                     </div>
@@ -53,30 +33,26 @@
     </div>
 </template>
 
+
 <script>
 import BackendAndFrontendCombined from "@/src/components/ValidationMessages/BackendAndFrontendCombined.vue";
-import { mapActions } from 'vuex'
 import useVuelidate from '@vuelidate/core'
 import {email, maxLength, minLength, required} from "@vuelidate/validators";
 import emitter from '@/EventBus.js'
 
 export default {
-    name: "Auth.Login",
+    name: "Auth.Password.Email",
     data(){
         return {
             form_is_posted: false,
 
             email: null,
-            password: null,
-            remember: true,
 
             validation: {
                 errors: [],
                 message: '',
                 validationAttributes: {
                     email: this.$t('modules.auth.login.form.email.title'),
-                    password: this.$t('modules.auth.login.form.password.title'),
-                    remember: this.$t('modules.auth.login.form.remember.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
                 showHeaderMessage: false,
@@ -96,7 +72,7 @@ export default {
         },
     },
     created() {
-        emitter.emit('set-title', 'Giriş Yap')
+        emitter.emit('set-title', 'Parola Yenileme İsteğinde Bulun')
     },
     setup() {
         return { vuelidate$: useVuelidate() }
@@ -110,20 +86,10 @@ export default {
                 $autoDirty: true,
                 $lazy: true,
             },
-            password: {
-                required,
-                minLength: minLength(8),
-                maxLength: maxLength(25),
-                $autoDirty: true,
-                $lazy: true,
-            },
         }
     },
     methods: {
-        ...mapActions('auth', [
-            'loginUser'
-        ]),
-        async login(e){
+        async sendResetLink(e){
             const $this = this
             e.preventDefault()
 
@@ -142,17 +108,15 @@ export default {
 
             const data = {
                 email: this.email,
-                password: this.password,
-                remember: this.remember,
             }
             await axios.get('/sanctum/csrf-cookie').then(async () => {
-                await axios.post('/api/auth/login', data)
+                await axios.post('/api/auth/password/email', data)
                     .then((response)=>{
                         this.$swal
                             .fire(response.data.message.title, response.data.message.body, response.data.message.type)
                             .then(() => {
                                 if (response.data.status){
-                                    this.loginUser()
+                                    this.$router.push({name:"Auth.Login"})
                                 }
                             })
                     })

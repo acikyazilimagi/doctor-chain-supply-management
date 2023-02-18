@@ -21,24 +21,9 @@ class RecipeItem extends Model
         return $this->belongsTo(Recipe::class);
     }
 
-    public static function categories(){
-        return [
-            [
-                "id" => 1,
-                "value" => "Ilac",
-            ],
-            [
-                "id" => 2,
-                "value" => "Medikal Urun",
-            ],
-            [
-                "id" => 3,
-                "value" => "Doktor Destegi",
-            ],
-            [
-                "id" => 4,
-                "value" => "Diger",
-            ],
-        ];
+    public function category()
+    {
+        return $this->hasOne(RecipeItemCategory::class, 'id', 'category_id');
     }
+
 }

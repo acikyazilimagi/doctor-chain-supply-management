@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Auth\ResetPassword;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\User;
 
-class TokenGenerateRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +24,7 @@ class TokenGenerateRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|string|email|exists:users'
+            'email' => ['required', 'string', 'email', 'max:60', 'exists:users'],
         ];
     }
 }

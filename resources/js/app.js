@@ -15,17 +15,23 @@ import router from './router.js'
 import VueAxios from 'vue-axios'
 import i18n from "./i18n";
 import store from "./src/store";
+import VueSecureHTML from 'vue-html-secure';
 
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 const app = createApp(App);
 
+app.config.globalProperties.$safeHTML = VueSecureHTML.safeHTML;
+app.config.globalProperties.$escapeHTML = VueSecureHTML.escapeHTML;
+app.config.globalProperties.$removeHTML = VueSecureHTML.removeHTML;
+
 app.use(router)
 app.use(VueAxios, axios)
 app.use(VueSweetalert2);
 app.use(i18n)
 app.use(store)
+app.use(VueSecureHTML)
 
 // Object.entries(import.meta.glob('./src/**/*.vue', { eager: true })).forEach(([path, definition]) => {
 //     app.component(path.split('/').pop().replace(/\.\w+$/, ''), definition.default);

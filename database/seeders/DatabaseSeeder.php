@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             ReferralLinkSeeder::class,
+            RecipeItemCategorySeederSeeder::class,
             SpecialtySeeder::class,
             \Epigra\TrGeoZones\Database\Seeders\TrGeoZonesDatabaseSeeder::class,
             // RecipeSeeder::class,

@@ -49,6 +49,15 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
+    mailhog:
+        image: 'mailhog/mailhog:latest'
+        container_name: MailServer
+        ports:
+            - '${MAILHOG_PORT:-1025}:1025'
+            - '${MAILHOG_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - doctorcsm
+        platform: linux/amd64
 networks:
     doctorcsm:
         driver: bridge
