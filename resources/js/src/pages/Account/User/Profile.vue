@@ -40,7 +40,9 @@
                     </h2>
                     <div :id="'referral_link_container_' + referral_link.id" class="accordion-collapse collapse" :aria-labelledby="'referral_link_container_' + referral_link.id" :data-bs-parent="'#referral_link_' + referral_link.id">
                         <div class="accordion-body">
-                            <h4 class="text-danger fw-bold my-2 d-block">{{ generateReferralLink(referral_link.code) }}</h4>
+                            <div class="overflow-scroll">
+                                <h4 class="text-danger fw-bold my-2 d-block">{{ generateReferralLink(referral_link.code) }}</h4>
+                            </div>
                             <h5 class="text-success ms-auto fw-bold">{{ $t('modules.account.referral.referenced_persons') }}</h5>
                             <ul class="list-group">
                                 <li class="list-group-item" v-for="user in referral_link.users" :key="'user_' + user.id">
