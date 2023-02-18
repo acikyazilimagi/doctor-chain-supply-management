@@ -18,6 +18,8 @@ class RecipeController extends Controller
               'description',
               'status',
               'created_by',
+              'created_at',
+              'status_updated_at',
             ])
             ->with([
               'items' => function($q){
@@ -62,6 +64,8 @@ class RecipeController extends Controller
                 'description',
                 'status',
                 'created_by',
+                'created_at',
+                'status_updated_at',
             ])
             ->with([
                 'items' => function($q){
@@ -110,6 +114,8 @@ class RecipeController extends Controller
                 'description',
                 'status',
                 'created_by',
+                'created_at',
+                'status_updated_at',
             ])
             ->with([
                 'items' => function($q){
@@ -199,6 +205,7 @@ class RecipeController extends Controller
             $recipe = Recipe::find($request->get('id'));
             $recipe->fill([
                 'status' => 1,
+                'status_updated_at' => now()
             ]);
             $recipe->save();
 

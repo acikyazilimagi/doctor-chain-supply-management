@@ -3,6 +3,7 @@
         <div v-for="recipe in recipes" class="accordion-item">
             <h2 class="accordion-header" :id="'recipe_' + recipe.id">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#recipe_container_' + recipe.id" aria-expanded="false" :aria-controls="'recipe_container_' + recipe.id">
+                    <span v-if="recipe.status === 1" class="me-2 text-danger">Karşılanma Zamanı : {{ recipe.status_updated_at }}</span>
                     <span class="badge me-2" :class="{'bg-success': recipe.status, 'bg-warning': !recipe.status}">{{ recipe.status ? 'Karşılandı' : 'Bekliyor' }}</span>
                     <span>{{ recipe.title }}</span>
                     <a v-if="!recipe.status && getUser && recipe.created_by === getUser.id" @click.prevent="support(recipe)" class="btn btn-sm btn-info d-inline-flex ms-auto">İhtiyacımı Karşıladım</a>

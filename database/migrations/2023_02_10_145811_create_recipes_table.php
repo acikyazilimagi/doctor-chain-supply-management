@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->integer('created_by');
             $table->boolean('status')->default(0);
+            $table->dateTime('status_updated_at')->nullable();
             $table->timestamps();
         });
     }
