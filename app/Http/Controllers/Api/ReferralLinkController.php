@@ -14,7 +14,7 @@ class ReferralLinkController extends Controller
             where(['user_id' => auth()->user()->id])
             ->with([
                 'users' => function($q){
-                    $q->select(['id', 'name', 'email', 'referral_link_code', 'verified']);
+                    $q->select(['id', 'first_name', 'last_name', 'email', 'referral_link_code', 'verified']);
                 }
             ])
             ->get();

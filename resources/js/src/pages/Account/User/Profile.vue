@@ -8,8 +8,8 @@
             <table class="table table-bordered">
                 <tbody>
                     <tr>
-                        <td>{{ $t('modules.account.referral.name') }}</td>
-                        <td>{{ user.data.data.name }}</td>
+                        <td>{{ $t('modules.account.referral.full_name') }}</td>
+                        <td>{{ user.data.data.full_name }}</td>
                     </tr>
                     <tr>
                         <td>{{ $t('modules.account.referral.email') }}</td>
@@ -44,7 +44,7 @@
                             <h5 class="text-success ms-auto fw-bold">{{ $t('modules.account.referral.referenced_persons') }}</h5>
                             <ul class="list-group">
                                 <li class="list-group-item" v-for="user in referral_link.users" :key="'user_' + user.id">
-                                    <span class="d-flex">{{ user.email }} - {{ user.name }}</span>
+                                    <span class="d-flex">{{ user.email }} - {{ user.full_name }}</span>
                                     <span v-if="user.verified" class="text-success">{{ $t('general.verified') }}</span>
                                     <button v-else class="btn btn-ssm btn-info ms-auto d-flex" @click.prevent="verifyFriend(user)">{{ $t('modules.account.referral.confirm_my_friend') }}</button>
                                 </li>

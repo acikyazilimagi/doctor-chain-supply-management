@@ -19,7 +19,7 @@
                     <a href="#" class="btn btn-info" @click="logoutUser">{{ $t('general.logout') }}</a>
                 </template>
                 <template v-else>
-                    <router-link class="btn btn-primary" :to="{ name: 'Auth.Register' }">{{ $t('general.register') }}</router-link>
+                    <router-link class="btn btn-primary me-2" :to="{ name: 'Auth.Register' }">{{ $t('general.register') }}</router-link>
                     <router-link class="btn btn-primary" :to="{ name: 'Auth.Login' }">{{ $t('general.login') }}</router-link>
                 </template>
             </div>

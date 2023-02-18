@@ -19,24 +19,46 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label for="name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.name.title') }}</label>
+                                <label for="first_name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.first_name.title') }}</label>
 
                                 <div class="col-md-6">
                                     <input
-                                        id="name"
+                                        id="first_name"
                                         type="text"
-                                        v-model="name"
+                                        v-model="first_name"
                                         class="form-control"
-                                        name="name"
-                                        :placeholder="$t('modules.auth.register.form.name.placeholder')"
+                                        name="first_name"
+                                        :placeholder="$t('modules.auth.register.form.first_name.placeholder')"
                                         :class="{
-                                    'is-invalid': vuelidate$.name.$error,
-                                    'is-valid': vuelidate$.name.$dirty && !vuelidate$.name.$invalid,
+                                    'is-invalid': vuelidate$.first_name.$error,
+                                    'is-valid': vuelidate$.first_name.$dirty && !vuelidate$.first_name.$invalid,
                                 }"
-                                        @input="vuelidate$.name.$touch()"
-                                        @focus="vuelidate$.name.$touch()"
+                                        @input="vuelidate$.first_name.$touch()"
+                                        @focus="vuelidate$.first_name.$touch()"
                                     >
-                                    <SingleInputError :vuelidate-object="vuelidate$.name" />
+                                    <SingleInputError :vuelidate-object="vuelidate$.first_name" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label for="last_name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.last_name.title') }}</label>
+
+                                <div class="col-md-6">
+                                    <input
+                                        id="last_name"
+                                        type="text"
+                                        v-model="last_name"
+                                        class="form-control"
+                                        name="last_name"
+                                        :placeholder="$t('modules.auth.register.form.last_name.placeholder')"
+                                        :class="{
+                                    'is-invalid': vuelidate$.last_name.$error,
+                                    'is-valid': vuelidate$.last_name.$dirty && !vuelidate$.last_name.$invalid,
+                                }"
+                                        @input="vuelidate$.last_name.$touch()"
+                                        @focus="vuelidate$.last_name.$touch()"
+                                    >
+                                    <SingleInputError :vuelidate-object="vuelidate$.last_name" />
                                 </div>
                             </div>
 
@@ -65,7 +87,7 @@
 
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="button" class="btn btn-danger" @click.prevent="reset">{{ $t('general.reset') }}</button>
+                                    <button type="button" class="btn btn-danger me-2" @click.prevent="reset">{{ $t('general.reset') }}</button>
                                     <button type="button" class="btn btn-primary" @click.prevent="update">{{ $t('general.update') }}</button>
                                 </div>
                             </div>
@@ -107,7 +129,8 @@ export default {
                 data: null,
             },
 
-            name: null,
+            first_name: null,
+            last_name: null,
             specialty: null,
 
             specialties: [],
@@ -116,7 +139,8 @@ export default {
                 errors: [],
                 message: '',
                 validationAttributes: {
-                    name: this.$t('modules.auth.register.form.name.title'),
+                    first_name: this.$t('modules.auth.register.form.first_name.title'),
+                    last_name: this.$t('modules.auth.register.form.last_name.title'),
                     specialty: this.$t('modules.auth.register.form.specialty.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
@@ -145,7 +169,14 @@ export default {
     },
     validations() {
         return {
-            name: {
+            first_name: {
+                minLength: minLength(2),
+                maxLength: maxLength(30),
+                required,
+                $autoDirty: true,
+                $lazy: true,
+            },
+            last_name: {
                 minLength: minLength(2),
                 maxLength: maxLength(30),
                 required,
@@ -162,7 +193,8 @@ export default {
     methods: {
         ...mapActions('auth', ['setUser']),
         reset() {
-            this.name = this.user.data.data.name
+            this.first_name = this.user.data.data.first_name
+            this.last_name = this.user.data.data.last_name
             this.specialty = this.user.data.data.specialty ? this.user.data.data.specialty.id : null
 
             this.vuelidate$.$reset()
@@ -197,7 +229,8 @@ export default {
             }
 
             const data = {
-                name: this.name,
+                first_name: this.first_name,
+                last_name: this.last_name,
                 specialty: this.specialty,
             }
 
