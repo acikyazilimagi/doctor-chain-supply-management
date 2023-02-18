@@ -18,7 +18,7 @@
                         v-model="item.category_id"
                         class="form-control"
                     >
-                        <option :value="null">{{ $t('general.select') }}</option>
+                        <option :value="null">Kategori Seçiniz</option>
                         <option v-for="category in recipeCategories" :value="category.id" :key="'category_' + category.id">{{ category.name }}</option>
                     </select>
                 </div>
