@@ -118,6 +118,11 @@ class RecipeController extends Controller
                     ]);
                 },
             ])
+            ->where(function ($q) {
+                if (request()->has('status')){
+                    $q->where(['status' => request()->get('status')]);
+                }
+            })
             ->orderByDesc('id')
             ->paginate($per_page);
 
