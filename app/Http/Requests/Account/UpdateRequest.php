@@ -18,4 +18,13 @@ class UpdateRequest extends FormRequest
             'specialty' => ['required'],
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'first_name' => 'Ad',
+            'last_name' => 'Soyad',
+            'specialty' => 'Uzmanlık',
+        ];
+    }
 }

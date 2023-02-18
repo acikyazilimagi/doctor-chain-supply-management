@@ -27,4 +27,10 @@ class ResetPasswordRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:60', 'exists:users'],
         ];
     }
+    public function attributes()
+    {
+        return [
+            'email' => 'E-Posta',
+        ];
+    }
 }

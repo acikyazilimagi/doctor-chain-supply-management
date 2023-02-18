@@ -23,4 +23,19 @@ class RegisterRequest extends FormRequest
             'referral_code' => ['required', 'min:16', 'max:16'],
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'first_name' => 'Ad',
+            'last_name' => 'Soyad',
+            'email' => 'E-Posta',
+            'password' => 'Parola',
+            'password_confirmation' => 'Parola (Tekrar)',
+            'legal_text' => 'Aydınlatma Metni',
+            'kvkk_text' => 'KVKK Metni',
+            'specialty' => 'Uzmanlık',
+            'referral_code' => 'Referans Kodu',
+        ];
+    }
 }
