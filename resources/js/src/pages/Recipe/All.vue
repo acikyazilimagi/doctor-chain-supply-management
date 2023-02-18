@@ -1,5 +1,22 @@
 <template>
     <div class="col-12">
+        <div class="card col-12 mb-2">
+            <div class="card-body">
+                <div class="form-group mt-2">
+                    <input v-model="filterOptions.text" type="text" class="form-control" id="formGroupExampleInput" placeholder="Bir şeyler yazın..">
+                </div>
+                <div class="form-group mt-2">
+                    <select v-model="filterOptions.status" class="form-control" id="exampleFormControlSelect1">
+                        <option :value="1">Karşılandı</option>
+                        <option :value="0">Bekliyor</option>
+                        <option :value="null" selected>Tüm Durumlar</option>
+                    </select>
+                </div>
+                <div class="form-group mt-2 text-center">
+                    <button type="submit" @click="prepareData" class="btn btn-primary mb-2">Filtrele</button>
+                </div>
+            </div>
+        </div>
         <EasyDataTable
             v-model:server-options="serverOptions"
             :server-items-length="serverItemsLength"
@@ -50,7 +67,7 @@ export default {
     watch:{
         serverOptions(){
             this.prepareData();
-        }
+        },
     },
     data(){
         return {
@@ -67,6 +84,10 @@ export default {
                 { text: "Destek Durumu", value: "status" },
             ],
             items: [],
+            filterOptions:{
+                status: null,
+                text: null,
+            },
         }
     },
     created() {
@@ -78,7 +99,7 @@ export default {
         async prepareData(){
             const $this = this
             $this.loading = true;
-            await this.axios.get(`/api/recipes/all?per_page=${this.serverOptions.rowsPerPage}&page=${this.serverOptions.page}`)
+            await this.axios.get(`/api/recipes/all?per_page=${this.serverOptions.rowsPerPage}&page=${this.serverOptions.page}&filter=${JSON.stringify(this.filterOptions)}`)
                 .then((response) => {
                     $this.items = response.data.data.data
                     $this.loading = false;
@@ -89,10 +110,40 @@ export default {
                     this.$swal.fire(e.response.data.message.title, e.response.data.message.body, e.response.data.message.type)
                 })
         }
-    }
+    },
 }
 </script>
 
 <style scoped>
-
+.filter-column {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  position: relative;
+}
+.filter-icon {
+  cursor: pointer;
+  display: inline-block;
+  width: 15px !important;
+  height: 15px !important;
+  margin-right: 4px;
+}
+.filter-menu {
+  padding: 15px 30px;
+  z-index: 1;
+  position: absolute;
+  top: 30px;
+  width: 200px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+}
+.filter-age-menu {
+  height: 40px;
+}
+.slider {
+  margin-top: 36px;
+}
+.status-selector {
+  width: 100%;
+}
 </style>
