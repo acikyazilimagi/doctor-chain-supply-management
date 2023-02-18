@@ -71,10 +71,10 @@
                 <div style="padding: 15px">
                     <div class="row">
                         <p>{{ item.description }}</p>
-                        <p>{{ $t('modules.recipe.form.address_detail.title') }} : {{ item.address?.address_detail }}</p>
                     </div>
-                    <div class="row">
-                        <div class="col-8">
+
+                    <div class="row flex-row-reverse flex-md-row">
+                        <div class="col-12 col-md-9 mb-3">
                             <ul class="list-group">
                                 <li class="list-group-item d-flex" v-for="i in item.items" :key="'item_' + i.id">
                                     <span class="d-inline-flex me-2 badge bg-info">{{ i.count }}</span>
@@ -83,8 +83,9 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="col-4">
+                        <div class="col-12 col-md-3">
                             <AddressTable v-if="item.address" :city="item.address.city" :district="item.address.district" :neighbourhood="item.address.neighbourhood" />
+                            <p>{{ $t('modules.recipe.form.address_detail.title') }} : {{ item.address?.address_detail }}</p>
                         </div>
                     </div>
                 </div>
