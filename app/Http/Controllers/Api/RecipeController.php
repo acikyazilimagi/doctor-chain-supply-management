@@ -47,7 +47,8 @@ class RecipeController extends Controller
               },
             ])
             ->where(['created_by' => auth()->user()->id])
-            ->orderByDesc('id')
+            ->orderBy('status', 'ASC')
+            ->orderBy('id', 'DESC')
             ->get();
 
         return response()->json([
@@ -92,7 +93,8 @@ class RecipeController extends Controller
                     ]);
                 },
             ])
-            ->orderByDesc('id')
+            ->orderBy('status', 'ASC')
+            ->orderBy('id', 'DESC')
             ->latest()
             ->take(100)
             ->get();
