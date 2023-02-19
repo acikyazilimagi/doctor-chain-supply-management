@@ -21,6 +21,7 @@
         "@vuelidate/validators": "^2.0.0",
         "mitt": "^3.0.0",
         "vue-axios": "^3.5.2",
+        "vue-cookie-comply": "^0.0.3",
         "vue-html-secure": "^1.0.10",
         "vue-i18n": "9",
         "vue-loader": "^17.0.1",

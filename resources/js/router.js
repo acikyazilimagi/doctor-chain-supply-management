@@ -132,6 +132,14 @@ const routes = [
         },
         children: [
             {
+                path: "/sayfalar/aydinlatma-metni",
+                component: () => import(/* webpackChunkName: "LegalText" */ '@/src/pages/LegalText.vue'),
+                name: "LegalText",
+                meta: {
+                    layout: "FullWidth",
+                },
+            },
+            {
                 path: '/sayfalar/:slug',
                 component: () => import(/* webpackChunkName: "ContentsRizaMetni" */ '@/src/pages/DynamicContent.vue'),
                 name: 'DynamicContent',

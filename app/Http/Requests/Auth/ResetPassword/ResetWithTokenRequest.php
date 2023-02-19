@@ -20,4 +20,13 @@ class ResetWithTokenRequest extends FormRequest
             'token' => 'required|string|min:50|max:100',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'email' => 'E-Posta',
+            'password' => 'Parola',
+            'password_confirmation' => 'Parola (Tekrar)',
+        ];
+    }
 }

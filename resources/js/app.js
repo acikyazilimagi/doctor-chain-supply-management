@@ -20,6 +20,9 @@ import VueSecureHTML from 'vue-html-secure';
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 
+import VueCookieComply from 'vue-cookie-comply'
+import 'vue-cookie-comply/dist/style.css'
+
 const app = createApp(App);
 
 app.config.globalProperties.$safeHTML = VueSecureHTML.safeHTML;
@@ -32,6 +35,7 @@ app.use(VueSweetalert2);
 app.use(i18n)
 app.use(store)
 app.use(VueSecureHTML)
+app.use(VueCookieComply)
 
 // Object.entries(import.meta.glob('./src/**/*.vue', { eager: true })).forEach(([path, definition]) => {
 //     app.component(path.split('/').pop().replace(/\.\w+$/, ''), definition.default);

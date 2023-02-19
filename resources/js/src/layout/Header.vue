@@ -5,7 +5,7 @@
 
             <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
                 <li><router-link class="nav-link px-2 link-dark" :to="{ name: 'Recipes.All' }">{{ $t('header.all_recipes') }}</router-link></li>
-                <li><router-link class="nav-link px-2 link-dark" :to="{ name: 'DynamicContent', params: {slug: 'riza-metni'} }">Rıza Metni</router-link></li>
+                <li><router-link class="nav-link px-2 link-dark" :to="{ name: 'LegalText' }">Aydınlatma Metni</router-link></li>
 
                 <template v-if="getAuthenticated">
                     <li><router-link class="nav-link px-2 link-dark" :to="{ name: 'Account.Recipes.Create' }">{{ $t('header.create_recipe') }}</router-link></li>
@@ -19,7 +19,7 @@
                     <a href="#" class="btn btn-info" @click="logoutUser">{{ $t('general.logout') }}</a>
                 </template>
                 <template v-else>
-                    <router-link class="btn btn-primary" :to="{ name: 'Auth.Register' }">{{ $t('general.register') }}</router-link>
+                    <router-link class="btn btn-primary me-2" :to="{ name: 'Auth.Register' }">{{ $t('general.register') }}</router-link>
                     <router-link class="btn btn-primary" :to="{ name: 'Auth.Login' }">{{ $t('general.login') }}</router-link>
                 </template>
             </div>

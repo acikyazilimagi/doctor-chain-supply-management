@@ -18,6 +18,8 @@ class RecipeController extends Controller
               'description',
               'status',
               'created_by',
+              'created_at',
+              'status_updated_at',
             ])
             ->with([
               'items' => function($q){
@@ -45,7 +47,8 @@ class RecipeController extends Controller
               },
             ])
             ->where(['created_by' => auth()->user()->id])
-            ->orderByDesc('id')
+            ->orderBy('status', 'ASC')
+            ->orderBy('id', 'DESC')
             ->get();
 
         return response()->json([
@@ -62,6 +65,8 @@ class RecipeController extends Controller
                 'description',
                 'status',
                 'created_by',
+                'created_at',
+                'status_updated_at',
             ])
             ->with([
                 'items' => function($q){
@@ -88,7 +93,8 @@ class RecipeController extends Controller
                     ]);
                 },
             ])
-            ->orderByDesc('id')
+            ->orderBy('status', 'ASC')
+            ->orderBy('id', 'DESC')
             ->latest()
             ->take(100)
             ->get();
@@ -101,7 +107,8 @@ class RecipeController extends Controller
 
     public function all(){
         $per_page = is_numeric(request('per_page')) ? request('per_page') : 15;
-        $page = is_numeric(request('page')) ? request('page') : 1;
+
+        $filter = collect(request()->get('filter', []));
 
         $recipes = Recipe::
             select([
@@ -110,22 +117,28 @@ class RecipeController extends Controller
                 'description',
                 'status',
                 'created_by',
+                'created_at',
+                'status_updated_at',
             ])
             ->with([
-                'items' => function($q){
-                    $q->select([
-                        'recipe_id',
-                        'name',
-                        'count',
-                        'category_id',
-                    ])->with([
-                        'category' => function($q){
-                            $q
-                                ->select(['id', 'name']);
-                        }
-                    ]);
+                'items' => function($q) use($filter) {
+                    $q
+                        ->select([
+                            'recipe_id',
+                            'name',
+                            'count',
+                            'category_id',
+                        ])
+                        ->with([
+                            'category' => function($q){
+                                $q->select(['id', 'name']);
+                            }
+                        ]);
+                    if ($filter->has('category_id') && $filter->get('category_id') !== null){
+                        $q->where('category_id', '=', intval($filter->get('category_id')));
+                    }
                 },
-                'address' => function($q){
+                'address' => function($q) use($filter) {
                     $q->select([
                         'model_class',
                         'model_id',
@@ -134,14 +147,27 @@ class RecipeController extends Controller
                         'neighbourhood',
                         'address_detail',
                     ]);
+                    if ($filter->has('address') && is_array($filter->get('address'))){
+                        if (array_key_exists('city', $filter->get('address')) && intval($filter->get('address')['city']) > 0){
+                            $q->where('city', '=', $filter->get('address')['city']);
+                        }
+
+                        if (array_key_exists('district', $filter->get('address')) && strlen($filter->get('address')['district']) > 1){
+                            $q->where('district', '=', $filter->get('address')['district']);
+                        }
+                    }
                 },
             ])
-            ->where(function ($q) {
-                if (request()->has('status')){
-                    $q->where(['status' => request()->get('status')]);
+            ->where(function ($q) use ($filter) {
+                if ($filter->has('title') && strlen($filter->get('title')) > 0){
+                    $q->where('title', 'like', '%' . $filter->get('title') . '%');
+                }
+                if ($filter->has('status') && $filter->get('status') !== null){
+                    $q->where(['status' => $filter->get('status')]);
                 }
             })
-            ->orderByDesc('id')
+            ->orderBy('status', 'ASC')
+            ->orderBy('id', 'DESC')
             ->paginate($per_page);
 
         return response()->json([
@@ -199,6 +225,7 @@ class RecipeController extends Controller
             $recipe = Recipe::find($request->get('id'));
             $recipe->fill([
                 'status' => 1,
+                'status_updated_at' => now()
             ]);
             $recipe->save();
 

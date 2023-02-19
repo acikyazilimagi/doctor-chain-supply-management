@@ -13,7 +13,7 @@ class AccountController extends Controller
 {
     public function show(){
         $user = User::
-            select(['name', 'email', 'specialty', 'email_verified_at'])
+            select(['first_name', 'last_name', 'email', 'specialty', 'email_verified_at'])
             ->where(['id' => auth()->user()->id])
             ->with([
                 'specialty' => function($q){
@@ -33,12 +33,14 @@ class AccountController extends Controller
             $user = User::find(auth()->user()->id);
 
             $user->createHistory([
-                'name' => $user->name,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
                 'email' => $user->email,
                 'specialty' => $user->specialty,
             ]);
 
-            $user->name = $request->get('name');
+            $user->first_name = $request->get('first_name');
+            $user->last_name = $request->get('last_name');
             $user->specialty = $request->get('specialty');
             $user->save();
 
