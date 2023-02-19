@@ -19,7 +19,6 @@ class RegisterRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:60', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'max:25', 'confirmed'],
             'legal_text' => ['accepted'],
-            'kvkk_text' => ['accepted'],
             'specialty' => ['required', 'min:1'],
             'referral_code' => ['required', 'min:16', 'max:16'],
         ];
@@ -34,7 +33,6 @@ class RegisterRequest extends FormRequest
             'password' => 'Parola',
             'password_confirmation' => 'Parola (Tekrar)',
             'legal_text' => 'Aydınlatma Metni',
-            'kvkk_text' => 'KVKK Metni',
             'specialty' => 'Uzmanlık',
             'referral_code' => 'Referans Kodu',
         ];

@@ -53,7 +53,6 @@ class AuthController
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'legal_text' => $data['legal_text'],
-            'kvkk_text' => $data['kvkk_text'],
             'specialty' => $data['specialty'],
             'referral_link_code' => $referral_code->code,
             'verified' => false,

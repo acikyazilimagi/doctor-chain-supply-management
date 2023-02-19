@@ -183,29 +183,7 @@
                                     @focus="vuelidate$.legal_text.$touch()"
                                 >
 
-                                <label class="form-check-label" for="legal_text">{{ $t('modules.auth.register.form.legal_text.placeholder') }}</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6 offset-md-4">
-                            <div class="form-check">
-                                <input
-                                    id="kvkk_text"
-                                    v-model="kvkk_text"
-                                    type="checkbox"
-                                    class="form-check-input"
-                                    name="kvkk_text"
-                                    :class="{
-                                        'is-invalid': vuelidate$.kvkk_text.$error,
-                                        'is-valid': vuelidate$.kvkk_text.$dirty && !vuelidate$.kvkk_text.$invalid,
-                                    }"
-                                    @input="vuelidate$.kvkk_text.$touch()"
-                                    @focus="vuelidate$.kvkk_text.$touch()"
-                                >
-
-                                <label class="form-check-label" for="kvkk_text">{{ $t('modules.auth.register.form.kvkk_text.placeholder') }}</label>
+                                <label class="form-check-label" for="legal_text" v-html-safe="$t('modules.auth.register.form.legal_text.placeholder', {link: legalPageLink})"></label>
                             </div>
                         </div>
                     </div>
@@ -255,7 +233,6 @@ export default {
             password_confirmation: null,
             specialty: null,
             legal_text: null,
-            kvkk_text: null,
             referral_code: null,
 
             specialties: [],
@@ -271,7 +248,6 @@ export default {
                     password_confirmation: this.$t('modules.auth.register.form.password_confirmation.title'),
                     specialty: this.$t('modules.auth.register.form.specialty.title'),
                     legal_text: this.$t('modules.auth.register.form.legal_text.title'),
-                    kvkk_text: this.$t('modules.auth.register.form.kvkk_text.title'),
                     referral_code: this.$t('modules.auth.register.form.referral_code.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
@@ -297,6 +273,10 @@ export default {
                     .show_backend_and_frontend_combined_error_messages
             )
         },
+        legalPageLink(){
+            const url = this.$router.resolve({ name: 'LegalText' }).fullPath
+            return "<a target='_blank' href=\"" + url + "\">KVKK ve Aydınlatma Metni'ni</a>"
+        }
     },
     setup() {
         return { vuelidate$: useVuelidate() }
@@ -349,11 +329,6 @@ export default {
                 $autoDirty: true,
                 $lazy: true,
             },
-            kvkk_text: {
-                sameAs: sameAs(true),
-                $autoDirty: true,
-                $lazy: true,
-            },
             referral_code: {
                 minLength: minLength(16),
                 maxLength: maxLength(16),
@@ -382,7 +357,6 @@ export default {
             this.password_confirmation = null
             this.specialty = null
             this.legal_text = null
-            this.kvkk_text = null
             this.referral_code = null
 
             this.vuelidate$.$reset()
@@ -409,7 +383,6 @@ export default {
                 password_confirmation: this.password_confirmation,
                 specialty: this.specialty,
                 legal_text: this.legal_text,
-                kvkk_text: this.kvkk_text,
                 referral_code: this.referral_code,
             }
 

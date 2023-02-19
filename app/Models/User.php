@@ -28,7 +28,6 @@ class User extends Authenticatable
         'specialty',
         'verified',
         'legal_text',
-        'kvkk_text',
         'referral_link_code',
     ];
 

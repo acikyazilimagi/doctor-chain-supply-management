@@ -24,7 +24,6 @@ return new class extends Migration
 
             $table->tinyInteger('specialty')->nullable();
             $table->boolean('legal_text');
-            $table->boolean('kvkk_text');
             $table->boolean('verified')->default(false);
 
             $table->rememberToken();

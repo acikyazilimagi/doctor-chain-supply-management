@@ -83,11 +83,7 @@ const tr = {
                     },
                     legal_text: {
                         title: 'Aydınlatma Metni',
-                        placeholder: 'Aydınlatma Metni\'ni okudum ve kabul ediyorum'
-                    },
-                    kvkk_text: {
-                        title: 'KVKK Metni',
-                        placeholder: 'KVKK Metni\'ni okudum ve kabul ediyorum'
+                        placeholder: '{link} okudum ve kabul ediyorum'
                     },
                     referral_code: {
                         title: 'Referans Kodu',
