@@ -31,7 +31,6 @@
                             <option v-for="cit in address.cities" :key="'city_' + cit.id" :value="cit.id">{{ cit.name }}</option>
                         </select>
                     </div>
-
                     <div class="col-12 col-md-4">
                         <label for="district">İlçe</label>
                         <select v-model="filterOptions.address.district" name="district" id="district" class="form-control">
@@ -39,13 +38,7 @@
                             <option v-for="dis in address.districts" :key="'district_' + dis.id" :value="dis.name">{{ dis.name }}</option>
                         </select>
                     </div>
-                </div>
-                <div class="row mt-2">
                     <div class="col-12 col-md-4">
-                        <label for="text">Genel</label>
-                        <input v-model="filterOptions.text" type="text" class="form-control" id="text" placeholder="Herhangi bir yerde arayın..">
-                    </div>
-                    <div class="col-12 col-md-4 ms-auto">
                         <label>&nbsp;</label>
                         <button type="submit" @click="prepareData" class="btn btn-primary col-12">Filtrele</button>
                     </div>
@@ -133,7 +126,6 @@ export default {
             items: [],
             filterOptions:{
                 status: null,
-                text: null,
                 category_id: null,
                 address: {
                     city: null,

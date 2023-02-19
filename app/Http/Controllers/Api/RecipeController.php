@@ -130,18 +130,12 @@ class RecipeController extends Controller
                             'category_id',
                         ])
                         ->with([
-                            'category' => function($q) use ($filter){
+                            'category' => function($q){
                                 $q->select(['id', 'name']);
-                                if ($filter->has('text') && strlen($filter->get('text')) > 0){
-                                    $q->where('name', 'like', '%' . $filter->get('text') . '%');
-                                }
                             }
                         ]);
                     if ($filter->has('category_id') && $filter->get('category_id') !== null){
                         $q->where('category_id', '=', intval($filter->get('category_id')));
-                    }
-                    if ($filter->has('text') && strlen($filter->get('text')) > 0){
-                        $q->where('name', 'like', '%' . $filter->get('text') . '%');
                     }
                 },
                 'address' => function($q) use($filter) {
@@ -162,9 +156,6 @@ class RecipeController extends Controller
                             $q->where('district', '=', $filter->get('address')['district']);
                         }
                     }
-                    if ($filter->has('text') && strlen($filter->get('text')) > 0){
-                       $q->where('address_detail', 'like', '%' . $filter->get('text') . '%');
-                    }
                 },
             ])
             ->where(function ($q) use ($filter) {
@@ -173,9 +164,6 @@ class RecipeController extends Controller
                 }
                 if ($filter->has('status') && $filter->get('status') !== null){
                     $q->where(['status' => $filter->get('status')]);
-                }
-                if ($filter->has('text') && strlen($filter->get('text')) > 0){
-                    $q->where('title', 'like', '%' . $filter->get('text') . '%');
                 }
             })
             ->orderBy('status', 'ASC')
