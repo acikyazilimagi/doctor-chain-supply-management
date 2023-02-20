@@ -223,20 +223,30 @@ class RecipeController extends Controller
     public function change_status(ChangeStatusRequest $request){
         try {
             $recipe = Recipe::find($request->get('id'));
-            $recipe->fill([
-                'status' => 1,
-                'status_updated_at' => now()
-            ]);
-            $recipe->save();
-
-            return response()->json([
-                "status" => true ,
-                "message" => [
-                    "title" => "Başarılı",
-                    "body" => "Kayıt başarıyla eklendi.",
-                    "type" => "success",
-                ]
-            ]);
+            if ($recipe->created_by === auth()->user()->id){
+                $recipe->fill([
+                    'status' => 1,
+                    'status_updated_at' => now()
+                ]);
+                $recipe->save();
+                return response()->json([
+                    "status" => true ,
+                    "message" => [
+                        "title" => "Başarılı",
+                        "body" => "Kayıt başarıyla eklendi.",
+                        "type" => "success",
+                    ]
+                ]);
+            }else{
+                return response()->json([
+                    "status" => false ,
+                    "message" => [
+                        "title" => "Hata !",
+                        "body" => "Hack girişiminde bulundunuz. Size ait olmayan bir kaydı güncelleyemezsiniz !",
+                        "type" => "error",
+                    ]
+                ]);
+            }
         }catch (\Exception $exception){
             return response()->json([
                 "status" => false ,
