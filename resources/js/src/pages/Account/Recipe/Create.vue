@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row mb-3">
             <div class="col-12">
-                <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :show-header-message="validation.showHeaderMessage" :vuelidate="vuelidate$" />
+                <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validation_attributes" :show-header-message="validation.showHeaderMessage" :vuelidate="vuelidate$" />
             </div>
         </div>
         <div class="row">
@@ -96,11 +96,7 @@ import AddressForm from "@/src/components/Address/Form.vue";
 import BackendAndFrontendCombined from "@/src/components/ValidationMessages/BackendAndFrontendCombined.vue";
 import SingleInputError from "@/src/components/ValidationMessages/SingleInputError.vue";
 import useVuelidate from '@vuelidate/core'
-import {
-    required,
-    minLength,
-    maxLength,
-} from '@vuelidate/validators'
+import { required, minLength, maxLength } from '@/src/helpers/TranslatedVuelidateValidators.js'
 import { mapGetters } from 'vuex'
 import emitter from '@/EventBus.js'
 

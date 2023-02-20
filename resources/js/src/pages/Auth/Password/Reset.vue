@@ -90,14 +90,7 @@ import BackendAndFrontendCombined from "@/src/components/ValidationMessages/Back
 import SingleInputError from "@/src/components/ValidationMessages/SingleInputError.vue";
 import useVuelidate from '@vuelidate/core'
 import emitter from '@/EventBus.js'
-
-import {
-    required,
-    minLength,
-    maxLength,
-    email,
-    sameAs,
-} from '@vuelidate/validators'
+import { required, minLength, maxLength, email, sameAs } from '@/src/helpers/TranslatedVuelidateValidators.js'
 
 export default {
     name: "Auth.Register",

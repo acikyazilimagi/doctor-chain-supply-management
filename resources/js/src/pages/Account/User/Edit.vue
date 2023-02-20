@@ -105,12 +105,7 @@ import BackendAndFrontendCombined from "@/src/components/ValidationMessages/Back
 import SingleInputError from "@/src/components/ValidationMessages/SingleInputError.vue";
 import useVuelidate from '@vuelidate/core'
 import emitter from '@/EventBus.js'
-
-import {
-    maxLength,
-    minLength,
-    required,
-} from '@vuelidate/validators'
+import { required, minLength, maxLength } from '@/src/helpers/TranslatedVuelidateValidators.js'
 import {mapActions,mapGetters} from "vuex";
 
 export default {

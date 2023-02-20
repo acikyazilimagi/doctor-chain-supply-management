@@ -37,7 +37,7 @@
 <script>
 import BackendAndFrontendCombined from "@/src/components/ValidationMessages/BackendAndFrontendCombined.vue";
 import useVuelidate from '@vuelidate/core'
-import {email, maxLength, minLength, required} from "@vuelidate/validators";
+import { required, minLength, maxLength, email } from '@/src/helpers/TranslatedVuelidateValidators.js'
 import emitter from '@/EventBus.js'
 
 export default {

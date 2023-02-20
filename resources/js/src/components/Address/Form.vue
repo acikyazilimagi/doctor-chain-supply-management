@@ -66,7 +66,7 @@
 <script>
 
 import useVuelidate from "@vuelidate/core";
-import {required} from "@vuelidate/validators";
+import { required } from '@/src/helpers/TranslatedVuelidateValidators.js'
 
 export default {
     name: "Address.Form",

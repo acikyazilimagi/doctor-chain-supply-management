@@ -1,4 +1,4 @@
-const tr = {
+const en = {
     general: {
         swal: {
             yes: 'Evet',
@@ -181,28 +181,28 @@ const tr = {
         }
     },
     vuelidate: {
-        "alpha": "Değer alfabetik değil",
-        "alphaNum": "Değer alfasayısal olmalıdır",
-        "and": "Değer, sağlanan tüm doğrulayıcılarla eşleşmiyor",
-        "between": "Değer {min} ile {max} arasında olmalıdır",
-        "decimal": "Değer ondalık olmalıdır",
-        "email": "Değer geçerli bir e-posta adresi değil",
-        "integer": "Değer bir tam sayı değil",
-        "ipAddress": "Değer geçerli bir IP adresi değil",
-        "macAddress": "Değer geçerli bir MAC Adresi değil",
-        "maxLength": "İzin verilen maksimum uzunluk {max}",
-        "maxValue": "İzin verilen maksimum değer {max}",
-        "minLength": "Bu alan en az {min} karakter uzunluğunda olmalıdır",
-        "minValue": "İzin verilen minimum değer {min}",
-        "not": "Değer, sağlanan doğrulayıcıyla eşleşmiyor",
-        "numeric": "Değer sayısal olmalıdır",
-        "or": "Değer, sağlanan doğrulayıcıların hiçbiriyle eşleşmiyor",
-        "required": "Değer gerekli",
-        "requiredIf": "Değer gerekli",
-        "requiredUnless": "Değer gerekli",
-        "sameAs": "Değer, {equalTo} değerine eşit olmalıdır",
-        "url": "Değer geçerli bir URL adresi değil"
+        "alpha": "The value is not alphabetical",
+        "alphaNum": "The value must be alpha-numeric",
+        "and": "The value does not match all of the provided validators",
+        "between": "The value must be between {min} and {max}",
+        "decimal": "Value must be decimal",
+        "email": "Value is not a valid email address",
+        "integer": "Value is not an integer",
+        "ipAddress": "The value is not a valid IP address",
+        "macAddress": "The value is not a valid MAC Address",
+        "maxLength": "The maximum length allowed is {max}",
+        "maxValue": "The maximum value allowed is {max}",
+        "minLength": "This field should be at least {min} characters long",
+        "minValue": "The minimum value allowed is {min}",
+        "not": "The value does not match the provided validator",
+        "numeric": "Value must be numeric",
+        "or": "The value does not match any of the provided validators",
+        "required": "Value is required",
+        "requiredIf": "The value is required",
+        "requiredUnless": "The value is required",
+        "sameAs": "The value must be equal to the {equalTo} value",
+        "url": "The value is not a valid URL address"
     }
 }
 
-export default tr
+export default en
