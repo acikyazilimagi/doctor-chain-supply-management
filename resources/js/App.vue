@@ -3,13 +3,13 @@
     <component :is="layout">
         <router-view></router-view>
     </component>
-<!--    <Footer />-->
+    <Footer />
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import Header from "@/src/layout/Header.vue";
-// import Footer from "@/src/layout/Footer.vue";
+import Footer from "@/src/layout/Footer.vue";
 import Default from "@/src/layout/Default.vue";
 import FullWidth from "@/src/layout/FullWidth.vue";
 import emitter from '@/EventBus.js'
@@ -18,7 +18,7 @@ export default {
     name: "App",
     components: {
         Header,
-        // Footer,
+        Footer,
         Default,
         FullWidth
     },

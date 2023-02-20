@@ -18,7 +18,7 @@ Route::prefix('auth')->group(function () {
 Route::get('pages/{slug}', \App\Http\Controllers\PageController::class);
 
 Route::group(['prefix' => 'recipes', 'as' => 'recipe.'], function (){
-    Route::get('/all', [\App\Http\Controllers\Api\RecipeController::class, 'all'])->name('all');
+    Route::post('/all', [\App\Http\Controllers\Api\RecipeController::class, 'all'])->name('all');
     Route::get('/latests', [\App\Http\Controllers\Api\RecipeController::class, 'latests'])->name('latests');
 
     Route::group(['prefix' => 'items', 'as' => 'item.'], function (){

@@ -48,11 +48,11 @@ class AuthController
         }
 
         $user = User::create([
-            'name' => $data['name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'legal_text' => $data['legal_text'],
-            'kvkk_text' => $data['kvkk_text'],
             'specialty' => $data['specialty'],
             'referral_link_code' => $referral_code->code,
             'verified' => false,
@@ -149,7 +149,7 @@ class AuthController
     }
 
     public function user(Request $request){
-        return User::select(['id', 'name', 'email', 'specialty'])
+        return User::select(['id', 'first_name', 'last_name', 'email', 'specialty'])
             ->where(['id' => auth()->user()->id])
             ->with([
                 'specialty' => function($query){

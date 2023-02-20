@@ -14,8 +14,18 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'min:2', 'max:30'],
+            'first_name' => ['required', 'string', 'min:2', 'max:30'],
+            'last_name' => ['required', 'string', 'min:2', 'max:30'],
             'specialty' => ['required'],
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'first_name' => 'Ad',
+            'last_name' => 'Soyad',
+            'specialty' => 'Uzmanlık',
         ];
     }
 }

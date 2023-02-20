@@ -13,7 +13,14 @@ class Recipe extends Model
         'title',
         'description',
         'created_by',
-        'status'
+        'status',
+        'status_updated_at',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime:d.m.Y H:i:s',
+        'updated_at' => 'datetime:d.m.Y H:i:s',
+        'status_updated_at' => 'datetime:d.m.Y H:i:s',
     ];
 
     public function items()

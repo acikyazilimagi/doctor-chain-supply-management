@@ -10,12 +10,16 @@
             </h2>
             <div :id="'recipe_container_' + recipe.id" class="accordion-collapse collapse" :aria-labelledby="'recipe_container_' + recipe.id" :data-bs-parent="'#recipe_' + recipe.id">
                 <div class="accordion-body">
+                    <div v-if="recipe.status === 1" class="row text-danger">
+                        <p>Karşılanma Zamanı : {{ recipe.status_updated_at }}</p>
+                    </div>
+
                     <div class="row">
                         <p>Açıklama : {{ recipe.description }}</p>
-                        <p>{{ $t('modules.recipe.form.address_detail.title') }} : {{ recipe.address?.address_detail }}</p>
                     </div>
-                    <div class="row">
-                        <div class="col-8">
+
+                    <div class="row flex-row-reverse flex-md-row">
+                        <div class="col-12 col-md-9 mb-3">
                             <ul class="list-group">
                                 <li class="list-group-item d-flex" v-for="item in recipe.items" :key="'item_' + item.id">
                                     <span class="d-inline-flex me-2 badge bg-info">{{ item.count }}</span>
@@ -24,8 +28,9 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="col-4">
+                        <div class="col-12 col-md-3">
                             <AddressTable v-if="recipe.address" :city="recipe.address.city" :district="recipe.address.district" :neighbourhood="recipe.address.neighbourhood" />
+                            <p>{{ $t('modules.recipe.form.address_detail.title') }} : {{ recipe.address?.address_detail }}</p>
                         </div>
                     </div>
                 </div>
@@ -35,7 +40,7 @@
 </template>
 
 <script>
-import { support } from '@/src/helpers.js'
+import { support } from '@/src/helpers/general.js'
 import AddressTable from "@/src/components/Address/Table.vue";
 import { mapGetters } from 'vuex';
 

@@ -45,10 +45,10 @@ const tr = {
         are_you_sure: 'Emin Misiniz?',
     },
     header: {
-        project_name: 'ABC Projesi',
-        all_recipes: 'Tüm İstekleri Listele',
-        create_recipe: 'İlaç İste',
-        all_my_recipes: 'Tüm İsteklerim',
+        project_name: 'Medikal İhtiyaç',
+        all_recipes: 'Tüm İhtiyaçları Listele',
+        create_recipe: 'İhtiyaç Oluştur',
+        all_my_recipes: 'Tüm İhtiyaçlarım',
         my_account: 'Hesabım',
         account_info: 'Hesap Bilgilerim',
         update_account_info: 'Bilgilerimi Güncelle',
@@ -58,9 +58,13 @@ const tr = {
         auth: {
             register: {
                 form: {
-                    name: {
-                        title: 'İsim',
-                        placeholder: 'Lütfen isminizi giriniz.'
+                    first_name: {
+                        title: 'Ad',
+                        placeholder: 'Lütfen adınızı giriniz.'
+                    },
+                    last_name: {
+                        title: 'Soyad',
+                        placeholder: 'Lütfen soyadınızı giriniz.'
                     },
                     email: {
                         title: 'E-Posta',
@@ -79,11 +83,7 @@ const tr = {
                     },
                     legal_text: {
                         title: 'Aydınlatma Metni',
-                        placeholder: 'Aydınlatma Metni\'ni okudum ve kabul ediyorum'
-                    },
-                    kvkk_text: {
-                        title: 'KVKK Metni',
-                        placeholder: 'KVKK Metni\'ni okudum ve kabul ediyorum'
+                        placeholder: '{link} okudum ve kabul ediyorum'
                     },
                     referral_code: {
                         title: 'Referans Kodu',
@@ -157,7 +157,7 @@ const tr = {
                 you_will_not_update: 'İsteklerinizi güncelleyemeyeceksiniz !'
             },
             referral: {
-                name: 'İsim',
+                full_name: 'Adı Soyadı',
                 email: 'E-Posta',
                 specialty: 'Uzmanlık',
                 referenced_persons: 'Referans Olunan Kişiler',
@@ -180,6 +180,29 @@ const tr = {
             },
         }
     },
+    vuelidate: {
+        "alpha": "Değer alfabetik değil",
+        "alphaNum": "Değer alfasayısal olmalıdır",
+        "and": "Değer, sağlanan tüm doğrulayıcılarla eşleşmiyor",
+        "between": "Değer {min} ile {max} arasında olmalıdır",
+        "decimal": "Değer ondalık olmalıdır",
+        "email": "Değer geçerli bir e-posta adresi değil",
+        "integer": "Değer bir tam sayı değil",
+        "ipAddress": "Değer geçerli bir IP adresi değil",
+        "macAddress": "Değer geçerli bir MAC Adresi değil",
+        "maxLength": "İzin verilen maksimum uzunluk {max}",
+        "maxValue": "İzin verilen maksimum değer {max}",
+        "minLength": "Bu alan en az {min} karakter uzunluğunda olmalıdır",
+        "minValue": "İzin verilen minimum değer {min}",
+        "not": "Değer, sağlanan doğrulayıcıyla eşleşmiyor",
+        "numeric": "Değer sayısal olmalıdır",
+        "or": "Değer, sağlanan doğrulayıcıların hiçbiriyle eşleşmiyor",
+        "required": "Değer gerekli",
+        "requiredIf": "Değer gerekli",
+        "requiredUnless": "Değer gerekli",
+        "sameAs": "Değer, {equalTo} değerine eşit olmalıdır",
+        "url": "Değer geçerli bir URL adresi değil"
+    }
 }
 
 export default tr

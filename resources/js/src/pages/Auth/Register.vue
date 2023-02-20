@@ -5,31 +5,53 @@
                 <div class="card-header">{{ $t('general.register') }}</div>
 
                 <div class="card-body">
-                   <div class="row">
-                       <div class="col-12">
-                           <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :show-header-message="validation.showHeaderMessage" :vuelidate="vuelidate$" />
-                       </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <BackendAndFrontendCombined :errors="validation.errors" :message="validation.message" :show="backendAndFrontendCombinedErrorsStatus" :validation-attributes="validation.validationAttributes" :show-header-message="validation.showHeaderMessage" :vuelidate="vuelidate$" />
+                        </div>
+                    </div>
 
-                   </div>
                     <div class="row mb-3">
-                        <label for="name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.name.title') }}</label>
+                        <label for="first_name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.first_name.title') }}</label>
 
                         <div class="col-md-6">
                             <input
-                                id="name"
+                                id="first_name"
                                 type="text"
-                                v-model="name"
+                                v-model="first_name"
                                 class="form-control"
-                                name="name"
-                                :placeholder="$t('modules.auth.register.form.name.placeholder')"
+                                name="first_name"
+                                :placeholder="$t('modules.auth.register.form.first_name.placeholder')"
                                 :class="{
-                                    'is-invalid': vuelidate$.name.$error,
-                                    'is-valid': vuelidate$.name.$dirty && !vuelidate$.name.$invalid,
+                                    'is-invalid': vuelidate$.first_name.$error,
+                                    'is-valid': vuelidate$.first_name.$dirty && !vuelidate$.first_name.$invalid,
                                 }"
-                                @input="vuelidate$.name.$touch()"
-                                @focus="vuelidate$.name.$touch()"
+                                @input="vuelidate$.first_name.$touch()"
+                                @focus="vuelidate$.first_name.$touch()"
                             >
-                            <SingleInputError :vuelidate-object="vuelidate$.name" />
+                            <SingleInputError :vuelidate-object="vuelidate$.first_name" />
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="last_name" class="col-md-4 col-form-label text-md-end">{{ $t('modules.auth.register.form.last_name.title') }}</label>
+
+                        <div class="col-md-6">
+                            <input
+                                id="last_name"
+                                type="text"
+                                v-model="last_name"
+                                class="form-control"
+                                name="last_name"
+                                :placeholder="$t('modules.auth.register.form.last_name.placeholder')"
+                                :class="{
+                                    'is-invalid': vuelidate$.last_name.$error,
+                                    'is-valid': vuelidate$.last_name.$dirty && !vuelidate$.last_name.$invalid,
+                                }"
+                                @input="vuelidate$.last_name.$touch()"
+                                @focus="vuelidate$.last_name.$touch()"
+                            >
+                            <SingleInputError :vuelidate-object="vuelidate$.last_name" />
                         </div>
                     </div>
 
@@ -161,36 +183,14 @@
                                     @focus="vuelidate$.legal_text.$touch()"
                                 >
 
-                                <label class="form-check-label" for="legal_text">{{ $t('modules.auth.register.form.legal_text.placeholder') }}</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6 offset-md-4">
-                            <div class="form-check">
-                                <input
-                                    id="kvkk_text"
-                                    v-model="kvkk_text"
-                                    type="checkbox"
-                                    class="form-check-input"
-                                    name="kvkk_text"
-                                    :class="{
-                                        'is-invalid': vuelidate$.kvkk_text.$error,
-                                        'is-valid': vuelidate$.kvkk_text.$dirty && !vuelidate$.kvkk_text.$invalid,
-                                    }"
-                                    @input="vuelidate$.kvkk_text.$touch()"
-                                    @focus="vuelidate$.kvkk_text.$touch()"
-                                >
-
-                                <label class="form-check-label" for="kvkk_text">{{ $t('modules.auth.register.form.kvkk_text.placeholder') }}</label>
+                                <label class="form-check-label" for="legal_text" v-html-safe="$t('modules.auth.register.form.legal_text.placeholder', {link: legalPageLink})"></label>
                             </div>
                         </div>
                     </div>
 
                     <div class="row mb-0">
                         <div class="col-md-6 offset-md-4">
-                            <button type="button" class="btn btn-danger me-auto" @click.prevent="reset">{{ $t('general.reset') }}</button>
+                            <button type="button" class="btn btn-danger me-2" @click.prevent="reset">{{ $t('general.reset') }}</button>
                             <button type="button" class="btn btn-primary" @click.prevent="register">{{ $t('general.register') }}</button>
                         </div>
                     </div>
@@ -207,13 +207,7 @@ import SingleInputError from "@/src/components/ValidationMessages/SingleInputErr
 import useVuelidate from '@vuelidate/core'
 import emitter from '@/EventBus.js'
 
-import {
-    required,
-    minLength,
-    maxLength,
-    email,
-    sameAs,
-} from '@vuelidate/validators'
+import { required, minLength, maxLength, email, sameAs } from '@/src/helpers/TranslatedVuelidateValidators.js'
 
 export default {
     name: "Auth.Register",
@@ -226,13 +220,13 @@ export default {
         return {
             form_is_posted: false,
 
-            name: null,
+            first_name: null,
+            last_name: null,
             email: null,
             password: null,
             password_confirmation: null,
             specialty: null,
             legal_text: null,
-            kvkk_text: null,
             referral_code: null,
 
             specialties: [],
@@ -241,13 +235,13 @@ export default {
                 errors: [],
                 message: '',
                 validationAttributes: {
-                    name: this.$t('modules.auth.register.form.name.title'),
+                    first_name: this.$t('modules.auth.register.form.first_name.title'),
+                    last_name: this.$t('modules.auth.register.form.last_name.title'),
                     email: this.$t('modules.auth.register.form.email.title'),
                     password: this.$t('modules.auth.register.form.password.title'),
                     password_confirmation: this.$t('modules.auth.register.form.password_confirmation.title'),
                     specialty: this.$t('modules.auth.register.form.specialty.title'),
                     legal_text: this.$t('modules.auth.register.form.legal_text.title'),
-                    kvkk_text: this.$t('modules.auth.register.form.kvkk_text.title'),
                     referral_code: this.$t('modules.auth.register.form.referral_code.title'),
                 },
                 show_backend_and_frontend_combined_error_messages: true,
@@ -273,13 +267,24 @@ export default {
                     .show_backend_and_frontend_combined_error_messages
             )
         },
+        legalPageLink(){
+            const url = this.$router.resolve({ name: 'LegalText' }).fullPath
+            return "<a target='_blank' href=\"" + url + "\">KVKK ve Aydınlatma Metni'ni</a>"
+        }
     },
     setup() {
         return { vuelidate$: useVuelidate() }
     },
     validations() {
         return {
-            name: {
+            first_name: {
+                minLength: minLength(2),
+                maxLength: maxLength(30),
+                required,
+                $autoDirty: true,
+                $lazy: true,
+            },
+            last_name: {
                 minLength: minLength(2),
                 maxLength: maxLength(30),
                 required,
@@ -318,11 +323,6 @@ export default {
                 $autoDirty: true,
                 $lazy: true,
             },
-            kvkk_text: {
-                sameAs: sameAs(true),
-                $autoDirty: true,
-                $lazy: true,
-            },
             referral_code: {
                 minLength: minLength(16),
                 maxLength: maxLength(16),
@@ -344,13 +344,13 @@ export default {
                 })
         },
         reset() {
-            this.name = null
+            this.first_name = null
+            this.last_name = null
             this.email = null
             this.password = null
             this.password_confirmation = null
             this.specialty = null
             this.legal_text = null
-            this.kvkk_text = null
             this.referral_code = null
 
             this.vuelidate$.$reset()
@@ -370,13 +370,13 @@ export default {
             }
 
             const data = {
-                name: this.name,
+                first_name: this.first_name,
+                last_name: this.last_name,
                 email: this.email,
                 password: this.password,
                 password_confirmation: this.password_confirmation,
                 specialty: this.specialty,
                 legal_text: this.legal_text,
-                kvkk_text: this.kvkk_text,
                 referral_code: this.referral_code,
             }
 

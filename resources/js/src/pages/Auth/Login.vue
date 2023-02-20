@@ -57,8 +57,8 @@
 import BackendAndFrontendCombined from "@/src/components/ValidationMessages/BackendAndFrontendCombined.vue";
 import { mapActions } from 'vuex'
 import useVuelidate from '@vuelidate/core'
-import {email, maxLength, minLength, required} from "@vuelidate/validators";
 import emitter from '@/EventBus.js'
+import { email, maxLength, required, minLength } from '@/src/helpers/TranslatedVuelidateValidators.js'
 
 export default {
     name: "Auth.Login",

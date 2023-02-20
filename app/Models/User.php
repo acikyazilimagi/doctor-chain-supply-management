@@ -21,13 +21,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'specialty',
         'verified',
         'legal_text',
-        'kvkk_text',
         'referral_link_code',
     ];
 
@@ -39,6 +39,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $appends = [
+        'full_name',
     ];
 
     public function referral_lins(){
@@ -54,6 +58,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'verified' => 'boolean',
     ];
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->attributes['first_name']  . ' ' . $this->attributes['last_name'];
+    }
 
     public function specialty(){
         return $this->hasOne(Specialty::class, 'id', 'specialty');

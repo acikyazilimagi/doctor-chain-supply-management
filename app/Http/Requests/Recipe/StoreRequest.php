@@ -28,4 +28,21 @@ class StoreRequest extends FormRequest
             'address.address_detail' => 'sometimes|string|max:500',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'title' => 'İhtiyaç Başlığı',
+            'description' => 'İhtiyaç Açıklaması',
+
+            'items.*.text' => 'İhtiyaç Başlığı',
+            'items.*.count' => 'İhtiyaç Kategorisi',
+            'items.*.category_id' => 'İhtiyaç Sayısı',
+
+            'address.city' => 'Şehir',
+            'address.district' => 'İlçe',
+            'address.neighbourhood' => 'Mahalle',
+            'address.address_detail' => 'Adres Detayı',
+        ];
+    }
 }

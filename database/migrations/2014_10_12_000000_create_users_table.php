@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -23,7 +24,6 @@ return new class extends Migration
 
             $table->tinyInteger('specialty')->nullable();
             $table->boolean('legal_text');
-            $table->boolean('kvkk_text');
             $table->boolean('verified')->default(false);
 
             $table->rememberToken();
