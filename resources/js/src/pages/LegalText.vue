@@ -72,8 +72,8 @@
                         <li>İşlenen kişisel verilerinin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle veri sahibinin aleyhine bir sonucun ortaya çıkmasına itiraz etme,</li>
                         <li>Kişisel verilerinin kanuna aykırı olarak işlenmesi sebebiyle zarara uğraması halinde zararın giderilmesini talep etme.</li>
                     </ul>
-                    <p>KVKK’nin ilgili kişinin haklarını düzenleyen 11. maddesi kapsamındaki taleplerinizi, “Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ’e göre Kisisel iletisim@medikalihtiyac.org  adresine yazılı olarak iletebilirsiniz.</p>
-                    <p>Kişisel verilerinizi nasıl işlediğimiz hakkında herhangi bir sorunuz veya endişeniz varsa, lütfen  iletisim@medikalihtiyac.org  adresinden bizimle iletişime geçin. Ekibimiz size yardımcı olmaktan ve sorularınızı yanıtlamaktan mutluluk duyacaktır.</p>
+                    <p>KVKK’nin ilgili kişinin haklarını düzenleyen 11. maddesi kapsamındaki taleplerinizi, “Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ’e göre Kisisel <a target="_blank" href="https://ttb.org.tr/iletisim.php">https://ttb.org.tr/iletisim.php</a> adresine yazılı olarak iletebilirsiniz.</p>
+                    <p>Kişisel verilerinizi nasıl işlediğimiz hakkında herhangi bir sorunuz veya endişeniz varsa, lütfen <a target="_blank" href="https://ttb.org.tr/iletisim.php">https://ttb.org.tr/iletisim.php</a> adresinden bizimle iletişime geçin. Ekibimiz size yardımcı olmaktan ve sorularınızı yanıtlamaktan mutluluk duyacaktır.</p>
                     <p>“Uygulamalarımızdaki değişiklikleri yansıtmak için bu gizlilik bildirimini zaman zaman güncelleyebiliriz. Güncellenmiş bildirimi uygulamamızda yayınlayarak ve bu bildirimin sonundaki "Son Güncelleme Tarihi "ni güncelleyerek her türlü değişikliği size bildireceğiz.”</p>
                     <p>Son Güncelleme Tarihi: 19 Şubat 2023</p>
                 </li>

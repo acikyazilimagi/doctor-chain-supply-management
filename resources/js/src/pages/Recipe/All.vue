@@ -90,7 +90,7 @@
 <script>
 import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
-import { support } from '@/src/helpers.js'
+import { support } from '@/src/helpers/general.js'
 import AddressTable from "@/src/components/Address/Table.vue";
 import emitter from '@/EventBus.js'
 import {mapGetters} from "vuex";
