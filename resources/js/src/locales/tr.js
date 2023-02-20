@@ -200,7 +200,7 @@ const tr = {
         "required": "Değer gerekli",
         "requiredIf": "Değer gerekli",
         "requiredUnless": "Değer gerekli",
-        "sameAs": "Değer, {equalTo} değerine eşit olmalıdır",
+        "sameAs": "Değer, {otherName} değerine eşit olmalıdır",
         "url": "Değer geçerli bir URL adresi değil"
     }
 }
