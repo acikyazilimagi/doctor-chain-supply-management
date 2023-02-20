@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { support } from '@/src/helpers.js'
+import { support } from '@/src/helpers/general.js'
 import AddressTable from "@/src/components/Address/Table.vue";
 import { mapGetters } from 'vuex';
 
