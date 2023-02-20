@@ -70,11 +70,7 @@ class AuthController
 
             event(new Registered($user));
 
-            $token = $user->createToken('access_token')->plainTextToken;
-
             return response()->json([
-                "token" => $token ,
-                "type" => "Bearer",
                 "status" => true ,
                 "message" => [
                     "title" => "Başarılı",
