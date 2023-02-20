@@ -309,7 +309,7 @@ export default {
                 required,
                 minLength: minLength(8),
                 maxLength: maxLength(25),
-                sameAs: sameAs(this.password),
+                sameAs: sameAs(this.password, this.validation.validationAttributes.password),
                 $autoDirty: true,
                 $lazy: true,
             },
